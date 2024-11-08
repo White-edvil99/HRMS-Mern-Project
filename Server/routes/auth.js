@@ -6,6 +6,6 @@ const verifyUser = require('../middleware/authMiddleware');
 const authRouter = express.Router();
 
 authRouter.post("/login", login);
-authRouter.post("/verify", verifyUser, verify);
+authRouter.get("/verify", verifyUser, verify);
 
 module.exports = authRouter;

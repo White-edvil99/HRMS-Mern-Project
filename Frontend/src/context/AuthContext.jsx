@@ -21,13 +21,15 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
-
+          console.log(response)
           if (response.data.success) {
             setUser(response.data.user);
           } else {
             setUser(null);
+            setLoading(false)
           }
         } catch (error) {
+            console.log(error)
           if (error.response && !error.response.data.error) {
             setUser(null);
           }
