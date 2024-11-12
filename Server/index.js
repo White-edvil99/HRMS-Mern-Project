@@ -6,6 +6,7 @@ const authRouter = require("./routes/auth");
 const connectToDb = require("./Database/Db");
 const departmentRouter = require("./routes/department");
 const employeeRoutes = require("./routes/EmployeRoute");
+const salaryRouter = require("./routes/salary")
 const { userRegister } = require("./UserSeed");
 
 connectToDb(); // Call the function to connect to the database
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
+app.use("/api/salary/", salaryRouter);
 
 const PORT = process.env.PORT || 7000;
 
