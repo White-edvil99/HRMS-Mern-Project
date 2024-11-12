@@ -11,11 +11,10 @@ import AddDepartment from "./components/Department/AddDepartment";
 import EmployeeList from "./components/Employee/EmployeeList";
 import AddEmployee from "./components/Employee/AddEmployee";
 import Edit from "./components/Employee/Edit";
-<<<<<<< HEAD
+
 import EmployeeDetails from "./components/Employee/View";
-=======
+
 import Add from "./components/salary/Add";
->>>>>>> dadddb64dd4983bfc3e5e4e2f556b682ebd322cd
 
 function App() {
   return (
@@ -46,16 +45,15 @@ function App() {
             <Route path="/admin-dashboard/add-employee" element={<AddEmployee />} />
             <Route path="/admin-dashboard/employee" element={<EmployeeList />} />
             <Route path="/admin-dashboard/employee/edit/:id" element={<Edit />} />
-<<<<<<< HEAD
+
             <Route path="/admin-dashboard/employee/view/:id" element={<EmployeeDetails />} />
 
-=======
-            <Route path="/admin-dashboard/salary/add" element={<Add />} />
->>>>>>> dadddb64dd4983bfc3e5e4e2f556b682ebd322cd
 
-          </Route>
-        </Routes>
-      </BrowserRouter>
+
+            <Route path="/admin-dashboard/salary/add" element={<Add />} />
+            </Route>
+            </Routes>
+</BrowserRouter>
     </AuthProvider>
   );
 }
