@@ -20,4 +20,8 @@ const userRegister = async () => {
     }
 }
 
-userRegister();
+module.exports = {
+    userRegister
+}
+
+// userRegister();

@@ -13,10 +13,10 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form submitted");
-
+  
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
-      console.log(response);
+      const response = await axios.post(`http://localhost:3000/api/auth/login`, { email, password });
+      console.log(response)
 
       if (response.data.success) {
         login(response.data.user);

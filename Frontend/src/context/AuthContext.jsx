@@ -21,28 +21,42 @@ const AuthProvider = ({ children }) => {
               },
             }
           );
-          console.log(response)
           if (response.data.success) {
             setUser(response.data.user);
           } else {
             setUser(null);
-            setLoading(false)
           }
         } catch (error) {
-            console.log(error)
+          console.log(error);
           if (error.response && !error.response.data.error) {
             setUser(null);
           }
-        } 
-        finally {
-            setLoading(false)
+        } finally {
+          setLoading(false);
         }
-
       }
     };
 
     verifyUser();
+
+    // Call refreshToken periodically
+    const interval = setInterval(refreshToken, 15 * 60 * 1000); // Refresh token every 15 minutes
+    return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
+
+  const refreshToken = async () => {
+    const token = localStorage.getItem("refreshToken");
+    if (token) {
+      try {
+        const response = await axios.post("http://localhost:3000/api/auth/refresh-token", { token });
+        if (response.data.success) {
+          localStorage.setItem("token", response.data.token);
+        }
+      } catch (error) {
+        console.log("Error refreshing token:", error);
+      }
+    }
+  };
 
   const login = (user) => {
     setUser(user);

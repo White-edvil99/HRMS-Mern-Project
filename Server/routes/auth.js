@@ -1,11 +1,11 @@
 const express = require('express');
-const {login, verify} = require('../controller/authController');
+const { login, verify, refreshToken } = require('../controller/authController');
 const verifyUser = require('../middleware/authMiddleware');
-// const { verify } = require('jsonwebtoken');
 
 const authRouter = express.Router();
 
 authRouter.post("/login", login);
 authRouter.get("/verify", verifyUser, verify);
+authRouter.post("/refresh-token", refreshToken);
 
 module.exports = authRouter;
