@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
-app.use('/api/department', departmentRouter);
+app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
 
 const PORT = process.env.PORT || 7000;

@@ -19,6 +19,24 @@ const addDepartment = async (req, res) => {
     }
 };
 
+const getDepartments = async (req, res) => {  // Added res parameter here
+    console.log("inside get departments");
+    try {
+        const departments = await Department.find();
+        return res.status(200).json({
+            success: true,
+            data: departments,
+            message: "successfully fetched departments"
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error,
+            message: error.message,
+        })
+    }
+}
 
 // Export as an object to make imports consistent
-module.exports = { addDepartment };
+module.exports = { addDepartment, getDepartments };

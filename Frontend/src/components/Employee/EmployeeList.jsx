@@ -15,7 +15,7 @@ const EmployeeList = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setEmployees(response.data.data);
       } catch (err) {
         console.error("Error fetching employee data", err);
@@ -89,7 +89,9 @@ const EmployeeList = () => {
                     {employee.department}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200 space-x-2">
-                    <button className="bg-blue-500 text-white px-3 py-1 rounded">
+                    <button className="bg-blue-500 text-white px-3 py-1 rounded"
+                     onClick={() => navigate(`/admin-dashboard/employee/view/${employee._id}`)}
+                    >
                       View
                     </button>
 

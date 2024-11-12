@@ -26,7 +26,7 @@ const AddDepartment = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/department/add", // Correct URL
+        "http://localhost:3000/api/departments/add", // Correct URL
         department,
         {
           headers: {

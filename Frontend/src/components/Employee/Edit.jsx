@@ -3,7 +3,8 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 
 const EditEmployee = () => {
-  const { id } = useParams(); // Get employee ID from URL
+  const { id } = useParams();
+  console.log(id) // Get employee ID from URL
   const navigate = useNavigate();
   const [employee, setEmployee] = useState({
     name: "",

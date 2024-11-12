@@ -38,6 +38,7 @@ const addEmployee = async (req, res) => {
     const user = await User.findOne({ email });
     console.log("user========>", user);
     if (user) {
+        alert("already an exitsing employee")
       return res
         .status(400)
         .json({ success: false, error: "User already registered as employee" });
