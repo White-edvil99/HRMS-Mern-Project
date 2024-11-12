@@ -36,7 +36,7 @@ const addEmployee = async (req, res) => {
     } = req.body;
 
     const user = await User.findOne({ email });
-    console.log("user========>", user);
+    // console.log("user========>", user);
     if (user) {
       return res
         .status(400)
@@ -53,7 +53,7 @@ const addEmployee = async (req, res) => {
       profileImage: req.file ? req.file.filename : "",
     });
 
-    console.log("new user ==========>", newUser);
+    // console.log("new user ==========>", newUser);
 
     const savedUser = await newUser.save();
 
@@ -136,4 +136,23 @@ const editEmployee = async () => {
   }
 };
 
-module.exports = { addEmployee, upload, getEmployees, editEmployee };
+const fetchEmployeesByIdDepId = async (req,res) =>{
+    const {id} = req.params;
+  try {
+    const employees = await EmployeeModel.find({department:id});
+    return res.status(200).json({
+      success: true,
+      data: employees,
+      message: "successfully fetched employees",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error,
+      message: error.message,
+    });
+  }
+}
+
+
+module.exports = { addEmployee, upload, getEmployees, editEmployee, fetchEmployeesByIdDepId };
