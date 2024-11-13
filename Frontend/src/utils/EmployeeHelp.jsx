@@ -40,4 +40,4 @@ const getEmployees = async (id)=>{
     return employees 
 };
 
-module.exports = fetchDepartment;
+module.exports = {fetchDepartment, getEmployees};
