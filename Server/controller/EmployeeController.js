@@ -86,7 +86,13 @@ const addEmployee = async (req, res) => {
 const getEmployees = async (req, res) => {
   console.log("inside get emp");
   try {
-    const employees = await EmployeeModel.find();
+    let employees
+     employees = await EmployeeModel.find();
+    if(!employees){
+      EmployeeModel.find({userId:id}).
+      populate("userId",{password:0}).
+      populate("department");
+     }
     return res.status(200).json({
       success: true,
       data: employees,
@@ -140,6 +146,7 @@ const editEmployee = async () => {
 const fetchEmployeesByIdDepId = async (req,res) =>{
     const {id} = req.params;
   try {
+    
     const employees = await EmployeeModel.find({department:id});
     return res.status(200).json({
       success: true,
