@@ -1,9 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SummaryCard from "./SummaryCard";
 import { FaUsers, FaBuilding, FaMoneyBillWave, FaCheck, FaTimes, FaHourglassHalf } from "react-icons/fa";
 import { MdOutlineApproval } from "react-icons/md";
+import axios from "axios";
 
 const AdminSummary = () => {
+  const [departmentCount, setDepartmentCount] = useState(0);
+  const [employeeCount, setEmployeeCount] = useState(0);
+
+  // Fetch department count
+  useEffect(() => {
+    const fetchDepartmentCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/departments", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        // Assume that response.data.data holds the department list
+        setDepartmentCount(response.data.data.length);
+      } catch (error) {
+        console.error("Error fetching department count data", error);
+      }
+    };
+    fetchDepartmentCount();
+  }, []);
+
+  // Fetch employee count
+  useEffect(() => {
+    const fetchEmployeeCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/employees", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        // Assume that response.data.data holds the employee list
+        setEmployeeCount(response.data.data.length);
+      } catch (error) {
+        console.error("Error fetching employee count data", error);
+      }
+    };
+    fetchEmployeeCount();
+  }, []);
+
   return (
     <div className="space-y-8 p-6">
       {/* Dashboard Overview Section */}
@@ -15,12 +57,12 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<FaUsers className="text-green-500 text-3xl" />}
             text="Total Employees"
-            number={10}
+            number={employeeCount} // Display dynamic employee count
           />
           <SummaryCard
             icon={<FaBuilding className="text-indigo-500 text-3xl" />}
             text="Total Departments"
-            number={3}
+            number={departmentCount} // Display dynamic department count
           />
           <SummaryCard
             icon={<FaMoneyBillWave className="text-yellow-500 text-3xl" />}
