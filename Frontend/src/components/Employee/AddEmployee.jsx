@@ -4,12 +4,26 @@ import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({});
+
+  const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
-    // Add any initialization code if necessary
+    const fetchDepartments = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/departments",{
+          headers:{
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        setDepartments(response.data.data); // Assuming response.data contains an array of department objects
+      } catch (error) {
+        console.error("Failed to fetch departments:", error);
+      }
+    };
+    fetchDepartments();
   }, []);
 
-  const [formData, setFormData] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -100,14 +114,19 @@ const AddEmployee = () => {
             onChange={handleChange}
             style={styles.input}
           />
-          <input
-            type="text"
+           <select
             name="department"
-            placeholder="Department"
             value={formData.department}
             onChange={handleChange}
             style={styles.input}
-          />
+          >
+            <option value="">Select Department</option>
+            {departments.map((dept) => (
+              <option key={dept._id} value={dept.dep_name}>
+                {dept.dep_name}
+              </option>
+            ))}
+          </select>
         </div>
         <div style={styles.row}>
           <input
