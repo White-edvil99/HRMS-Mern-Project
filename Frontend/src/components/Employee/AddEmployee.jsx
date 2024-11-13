@@ -5,14 +5,14 @@ import { useNavigate } from "react-router-dom";
 const AddEmployee = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({});
-
   const [departments, setDepartments] = useState([]);
+  const [image, setImage] = useState(null);
 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/departments",{
-          headers:{
+        const response = await axios.get("http://localhost:3000/api/departments", {
+          headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
@@ -24,10 +24,16 @@ const AddEmployee = () => {
     fetchDepartments();
   }, []);
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -37,11 +43,15 @@ const AddEmployee = () => {
     Object.keys(formData).forEach((key) => {
       formDataObj.append(key, formData[key]);
     });
+    if (image) {
+      formDataObj.append("image", image); // Append the image file to the FormData
+    }
 
     try {
       const response = await axios.post("http://localhost:3000/api/employees/add", formDataObj, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data",
         },
       });
       if (response.data.success) {
@@ -114,7 +124,7 @@ const AddEmployee = () => {
             onChange={handleChange}
             style={styles.input}
           />
-           <select
+          <select
             name="department"
             value={formData.department}
             onChange={handleChange}
@@ -152,15 +162,12 @@ const AddEmployee = () => {
             <option value="Manager">Manager</option>
             <option value="Developer">Developer</option>
             <option value="Designer">Designer</option>
-            {/* Add more roles as needed */}
           </select>
           <input
-            type="text"
+            type="file"
             name="image"
-            placeholder="Image URL"
-            value={formData.image}
-            onChange={handleChange}
-            style={styles.input}
+            onChange={handleImageChange}
+            style={styles.inputFile}
           />
         </div>
         <button type="submit" style={styles.submitButton}>Submit</button>
@@ -171,17 +178,18 @@ const AddEmployee = () => {
 
 const styles = {
   container: {
-    maxWidth: "500px",
+    maxWidth: "600px",
     margin: "auto",
-    padding: "20px",
-    borderRadius: "8px",
-    boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.1)",
-    backgroundColor: "#f9f9f9",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0px 0px 15px rgba(0, 0, 0, 0.1)",
+    backgroundColor: "#ffffff",
   },
   title: {
     textAlign: "center",
     marginBottom: "20px",
     color: "#333",
+    fontSize: "24px",
   },
   form: {
     display: "flex",
@@ -189,24 +197,34 @@ const styles = {
   },
   row: {
     display: "flex",
-    gap: "10px",
-    marginBottom: "15px",
+    gap: "15px",
+    marginBottom: "20px",
+    flexWrap: "wrap",
   },
   input: {
-    flex: 1,
-    padding: "10px",
-    borderRadius: "4px",
+    flex: "1",
+    padding: "12px",
+    borderRadius: "5px",
     border: "1px solid #ccc",
+    fontSize: "14px",
+  },
+  inputFile: {
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    cursor: "pointer",
+    fontSize: "14px",
   },
   submitButton: {
-    padding: "10px",
-    backgroundColor: "#28a745",
+    padding: "12px",
+    backgroundColor: "#4CAF50",
     color: "#fff",
     border: "none",
-    borderRadius: "4px",
+    borderRadius: "5px",
     cursor: "pointer",
+    fontSize: "16px",
     fontWeight: "bold",
-    marginTop: "20px",
+    marginTop: "30px",
   },
 };
 

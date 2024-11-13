@@ -5,17 +5,21 @@ const bcrypt = require("bcrypt");
 const path = require("path");
 const EmployeeModel = require("../models/EmployeeModel");
 
+// Storage configuration for multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/uploads");
+    cb(null, "public/uploads"); // Upload directory for images
   },
   filename: (req, file, cb) => {
+    // Use original name with timestamp to avoid overwriting
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
+// Initialize multer upload with the defined storage configuration
 const upload = multer({ storage: storage });
 
+// Add Employee function
 const addEmployee = async (req, res) => {
   try {
     console.log("Request body:", req.body);
@@ -35,29 +39,29 @@ const addEmployee = async (req, res) => {
       role,
     } = req.body;
 
+    // Check if user already exists
     const user = await User.findOne({ email });
-    // console.log("user========>", user);
     if (user) {
-        alert("already an exitsing employee")
       return res
         .status(400)
         .json({ success: false, error: "User already registered as employee" });
     }
 
+    // Hash the password before saving
     const hashPassword = await bcrypt.hash(password, 10);
 
+    // Create a new user
     const newUser = new User({
       name,
       email,
       password: hashPassword,
       role: role.toLowerCase(),
-      profileImage: req.file ? req.file.filename : "",
+      profileImage: req.file ? req.file.filename : "", // Save image filename if exists
     });
-
-    // console.log("new user ==========>", newUser);
 
     const savedUser = await newUser.save();
 
+    // Create a new employee
     const newEmployee = new Employee({
       name: savedUser.name,
       employeeId,
@@ -70,7 +74,7 @@ const addEmployee = async (req, res) => {
       salary,
       password: hashPassword,
       role,
-      image: req.file ? req.file.filename : "",
+      image: req.file ? req.file.filename : "", // Save image filename if exists
     });
 
     await newEmployee.save();
@@ -83,14 +87,14 @@ const addEmployee = async (req, res) => {
   }
 };
 
+// Get all employees
 const getEmployees = async (req, res) => {
-  console.log("inside get emp");
   try {
     const employees = await EmployeeModel.find();
     return res.status(200).json({
       success: true,
       data: employees,
-      message: "successfully fetched employees",
+      message: "Successfully fetched employees",
     });
   } catch (error) {
     return res.status(500).json({
@@ -102,49 +106,50 @@ const getEmployees = async (req, res) => {
 };
 
 // Edit employee function
-
-const editEmployee = async () => {
+const editEmployee = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
 
-  //upate profileimage if a new file upload
-
+  // Check if a new image is uploaded
   if (req.file) {
-    updateData.image = req.file.filename;
+    updateData.image = req.file.filename; // Update the image filename if uploaded
   }
+
   try {
     const updateEmployee = await Employee.findByIdAndUpdate(id, updateData, {
       new: true,
     });
+
     if (!updateEmployee) {
       return res.status(400).json({
         success: false,
-        message: "employee not found",
+        message: "Employee not found",
       });
     }
+
     res.status(200).json({
       success: true,
       data: updateEmployee,
-      message: "employee updated successfully",
+      message: "Employee updated successfully",
     });
-    
   } catch (error) {
     console.error("Error updating employee:", error.message);
     res.status(500).json({
-        success: false,
-        error: "server side error in updating employee"
-    })
+      success: false,
+      error: "Server error in updating employee",
+    });
   }
 };
 
-const fetchEmployeesByIdDepId = async (req,res) =>{
-    const {id} = req.params;
+// Fetch employees by department ID
+const fetchEmployeesByIdDepId = async (req, res) => {
+  const { id } = req.params;
   try {
-    const employees = await EmployeeModel.find({department:id});
+    const employees = await EmployeeModel.find({ department: id });
     return res.status(200).json({
       success: true,
       data: employees,
-      message: "successfully fetched employees",
+      message: "Successfully fetched employees by department",
     });
   } catch (error) {
     return res.status(500).json({
@@ -153,7 +158,27 @@ const fetchEmployeesByIdDepId = async (req,res) =>{
       message: error.message,
     });
   }
-}
+};
 
+// Fetch a specific employee by ID
+const fetchEmployeeById = async (req, res) => {
+  try {
+    const employee = await Employee.findById(req.params.id);
+    if (!employee) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+    res.json(employee);
+  } catch (error) {
+    console.error("Error fetching employee by ID:", error);
+    res.status(500).json({ error: "Server error in fetching employee by ID" });
+  }
+};
 
-module.exports = { addEmployee, upload, getEmployees, editEmployee, fetchEmployeesByIdDepId };
+module.exports = {
+  addEmployee,
+  upload,
+  fetchEmployeeById,
+  getEmployees,
+  editEmployee,
+  fetchEmployeesByIdDepId,
+};

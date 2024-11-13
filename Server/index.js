@@ -8,10 +8,13 @@ const departmentRouter = require("./routes/department");
 const employeeRoutes = require("./routes/EmployeRoute");
 const salaryRouter = require("./routes/salary")
 const { userRegister } = require("./UserSeed");
+const path = require("path");
 
 connectToDb(); // Call the function to connect to the database
 
 const app = express();
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+
 app.use(cors());
 app.use(express.json());
 
@@ -19,6 +22,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/salary/", salaryRouter);
+
 
 const PORT = process.env.PORT || 7000;
 
