@@ -24,6 +24,26 @@ const EmployeeList = () => {
     fetchEmployees();
   }, []);
 
+  //delte fucntion of employee
+
+  const deleteEmployee = async (employeeId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/employees/${employeeId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+  
+      if (response.status === 200) {
+        setEmployees(employees.filter(employee => employee._id !== employeeId));
+      }
+    } catch (error) {
+      console.error("Error deleting employee", error);
+    }
+  };
+  
+  
+
   const filteredEmployees = employees.filter((employee) =>
     employee.employeeId.includes(searchTerm)
   );
@@ -92,11 +112,20 @@ const EmployeeList = () => {
                     >
                       Edit
                     </button>
-                    <button className="bg-yellow-500 text-white px-3 py-1 rounded">
+                    <button className="bg-yellow-500 text-white px-3 py-1 rounded"
+                     onClick={() =>
+                      navigate(`/admin-dashboard/employee/salary/${employee._id}`)
+                    }
+                    >
                       Salary
                     </button>
                     <button className="bg-red-500 text-white px-3 py-1 rounded">
                       Leave
+                    </button>
+                    <button className="bg-red-500 text-white px-3 py-1 rounded"
+                    onClick={()=> deleteEmployee(employee._id)}  //triger the delete function
+                    >
+                      Delete
                     </button>
                   </td>
                 </tr>

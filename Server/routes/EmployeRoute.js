@@ -9,12 +9,14 @@ const {
   editEmployee,
   fetchEmployeesByIdDepId,
   fetchEmployeeById,
+  deleteEmployee,
 } = require("../controller/EmployeeController");
 
 router.post("/add", verifyUser, upload.single("image"), addEmployee);
 router.get("/", getEmployees);
-router.put("/edit/:id", verifyUser, upload.single("image"), editEmployee);
 router.get("/department/:id", verifyUser, fetchEmployeesByIdDepId);
-router.get("/view/:id", fetchEmployeeById); // Change this route to fetch by `_id`
+router.get("/view/:id", fetchEmployeeById); // Route to fetch employee by `_id`
+router.put("/:id", upload.single("image"), editEmployee); // Fixed route
+router.delete("/:id", deleteEmployee);
 
 module.exports = router;

@@ -22,7 +22,8 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
-app.use("/api/salary/", salaryRouter);
+app.use("/api/salary", salaryRouter);
+app.use('api/leave', leaveRouter);
 
 const PORT = process.env.PORT || 7000;
 
