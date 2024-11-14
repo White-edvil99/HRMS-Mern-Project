@@ -18,7 +18,7 @@ import Summary from "./components/EmployeeDashboard/Summary";
 import List from "./components/leave/List";
 import AddLeave from "./components/leave/Add";
 import ViewSalary from "./components/salary/ViewSalary";
-import ViewSalary from "./components/salary/ViewSalary";
+
 import Setting from "./components/EmployeeDashboard/Setting";
 
 function App() {
