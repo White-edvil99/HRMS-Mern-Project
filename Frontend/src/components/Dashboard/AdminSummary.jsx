@@ -8,9 +8,9 @@ import axios from "axios";
 const AdminSummary = () => {
   const [departmentCount, setDepartmentCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
-  cosnt [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState(null);
 
-  //fetch details from server 
+  //fetch details from server   
   useEffect (()=>{
     const fetchSummary = async ()=>{
       try {

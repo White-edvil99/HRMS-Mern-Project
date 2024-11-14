@@ -1,9 +1,11 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const RolebaseRoute = ({ children, requiredRole }) => {
   const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
 
   if (loading) {
    return <div>Loading.....</div>;
@@ -13,9 +15,11 @@ const RolebaseRoute = ({ children, requiredRole }) => {
     return user ? children : <Navigate to="/login" />;
   }
 
-  if (!requiredRole.includes(user.role)) {
-    <Navigate to="/unauthorized" />;
-  }
+  console.log("================>>",requiredRole.includes());
+
+  // if (!requiredRole.includes(user.role)) {
+  //   navigate('/unauthorized')
+  // }
 
   return children;
 };

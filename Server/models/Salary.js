@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 const salarySchema = new Schema({
   employeeId: { type: String, required: true, unique: true },
   basicSalary: { type: Number, required: true },
-  allowances:{type:Number, required:true},
+  allowance:{type:Number, required:true},
   deductions:{type:Number},
   netSalary:{type:Number},
   payDate:{type:Date,required:true},
