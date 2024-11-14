@@ -8,7 +8,7 @@ import axios from "axios";
 const AdminSummary = () => {
   const [departmentCount, setDepartmentCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
-  cosnt [summary, setSummary] = useState(null);
+  const [summary, setSummary] = useState(null);
 
   //fetch details from server 
   useEffect (()=>{
@@ -19,7 +19,7 @@ const AdminSummary = () => {
             Authorization:`Bearer ${localStorage.getItem('token')}`
           }
          })
-         setSummary(summary)
+         setSummary(summary.data)
       } catch (error) {
         if(error.response){
           alert(error.response.data.error)
@@ -107,22 +107,22 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<FaCheck className="text-blue-500 text-3xl" />}
             text="Leave Applied"
-            number={10}
+            number={summary.leaveSummary.appliedFor}
           />
           <SummaryCard
             icon={<MdOutlineApproval className="text-green-500 text-3xl" />}
             text="Leave Approved"
-            number={3}
+            number={summary.leaveSummary.approved}
           />
           <SummaryCard
             icon={<FaTimes className="text-red-500 text-3xl" />}
             text="Leave Rejected"
-            number={3}
+            number={summary.leaveSummary.rejected}
           />
           <SummaryCard
             icon={<FaHourglassHalf className="text-orange-500 text-3xl" />}
             text="Leave Pending"
-            number={4}
+            number={summary.leaveSummary.pending}
           />
         </div>
       </div>

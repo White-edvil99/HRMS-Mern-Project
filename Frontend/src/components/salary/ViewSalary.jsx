@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Salary from "../../../../Server/models/Salary";
+import EmployeeModel from "../../../../Server/models/EmployeeModel";
 
 const ViewSalary = () => {
   const { id } = useParams();
@@ -19,6 +21,10 @@ const ViewSalary = () => {
           }
         );
         setSalaryData(response.data);
+        // if(!Salary || Salary.length < 1){
+        //   const employee = await EmployeeModel.findOne({UserId : id})
+        //   Salary = await Salary.find(employeeId : employee._id).populate('employeeId','employeeId')
+        // }
       } catch (err) {
         console.error("Error fetching salary details", err);
       }

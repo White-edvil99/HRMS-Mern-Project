@@ -15,16 +15,16 @@ const getSummary = async ()=>{
         const leaveStatus = await leaveSchema.aggregate([
             {
                 $group:{
-                    status:"$status",
+                    _id:"$status",
                     count: {$sum: 1}
                 }
             }
         ])
         const leaveSummary = {
             appliedFor:employeeAppliedForLeave.length,
-            approved:leaveStatus.find(item => item.status === "Approved")?.count || 0,
-            rejected:leaveStatus.find(item => item.status === "Rejected")?.count || 0,
-            pending:leaveStatus.find(item => item.status === "Pending")?.count || 0,
+            approved:leaveStatus.find(item => item._id === "Approved")?.count || 0,
+            rejected:leaveStatus.find(item => item._id === "Rejected")?.count || 0,
+            pending:leaveStatus.find(item => item._id === "Pending")?.count || 0,
         }
         return res.status(200).json({
             totalEmployees,
@@ -33,6 +33,7 @@ const getSummary = async ()=>{
             leaveSummary
         })
        } catch (error) {
+            console.log(error.message)
             return response.status(500).json({success: false, error: "dashbboard summary error "})
        }
 }
