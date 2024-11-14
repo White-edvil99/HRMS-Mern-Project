@@ -4,9 +4,35 @@ import { FaUsers, FaBuilding, FaMoneyBillWave, FaCheck, FaTimes, FaHourglassHalf
 import { MdOutlineApproval } from "react-icons/md";
 import axios from "axios";
 
+
 const AdminSummary = () => {
   const [departmentCount, setDepartmentCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
+  cosnt [summary, setSummary] = useState(null);
+
+  //fetch details from server 
+  useEffect (()=>{
+    const fetchSummary = async ()=>{
+      try {
+          summary = await axios.get("http://localhost:50000/api/dashboard/summary",{
+          headers:{
+            Authorization:`Bearer ${localStorage.getItem('token')}`
+          }
+         })
+         setSummary(summary)
+      } catch (error) {
+        if(error.response){
+          alert(error.response.data.error)
+        }
+        console.log(error)
+      }
+    }
+    fetchSummary()
+  },[])
+
+  if(!summary){
+    return <div> Loading .. .. ..</div>
+  }
 
   // Fetch department count
   useEffect(() => {
@@ -57,17 +83,17 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<FaUsers className="text-green-500 text-3xl" />}
             text="Total Employees"
-            number={employeeCount} // Display dynamic employee count
+            number={summary.totalEmployees} // Display dynamic employee count
           />
           <SummaryCard
             icon={<FaBuilding className="text-indigo-500 text-3xl" />}
             text="Total Departments"
-            number={departmentCount} // Display dynamic department count
+            number={summary.totalDepartments} // Display dynamic department count
           />
           <SummaryCard
             icon={<FaMoneyBillWave className="text-yellow-500 text-3xl" />}
             text="Monthly Pay"
-            number={50000}
+            number={summary.totalSalary}
           />
         </div>
       </div>

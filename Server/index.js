@@ -6,10 +6,13 @@ const authRouter = require("./routes/auth");
 const connectToDb = require("./Database/Db");
 const departmentRouter = require("./routes/department");
 const employeeRoutes = require("./routes/EmployeRoute");
-const salaryRouter = require("./routes/salary")
+const salaryRouter = require("./routes/salary");
+const settingRouter = require("./routes/setting")
 const { userRegister } = require("./UserSeed");
 const path = require("path");
 const leaveRouter = require("./routes/leave");
+// const connectToDb = require("./Database/Db");
+const dashboardRouter = require("./routes/dashboard")
 
 connectToDb(); // Call the function to connect to the database
 
@@ -24,6 +27,9 @@ app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/salary", salaryRouter);
 app.use('api/leave', leaveRouter);
+app.use("/api/setting/", settingRouter);
+app.use("/api/dashboard/", dashboardRouter);
+
 
 const PORT = process.env.PORT || 7000;
 

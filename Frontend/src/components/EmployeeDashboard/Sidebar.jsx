@@ -58,7 +58,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/employee-dashboard/salary"
+          to={`/employee-dashboard/salary/${user._id}`}
           className={({ isActive }) =>
             `flex items-center gap-2 px-4 py-3 rounded-lg ${
               isActive ? "bg-gray-200 text-blue-500 font-semibold" : "hover:bg-gray-100"
