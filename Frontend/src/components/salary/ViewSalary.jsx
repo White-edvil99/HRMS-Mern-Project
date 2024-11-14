@@ -84,14 +84,3 @@ const ViewSalary = () => {
 };
 
 export default ViewSalary;
-import React from 'react'
-
-const ViewSalary = () => {
-  return (
-    <div>
-      ViewSalary
-    </div>
-  )
-}
-
-export default ViewSalary
