@@ -35,7 +35,7 @@ const Add = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/employees", {
+        const response = await axios.get("http://localhost:3000/api/user/role/employee", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -62,12 +62,34 @@ const Add = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleBasicAllowanceChange = (e) => {
     setEmployee({
       ...employee,
-      [e.target.name]: e.target.value,
+      allowance: +e.target.value,
     });
   };
+
+
+  const handleChange=(e)=>{
+    setEmployee({
+      ...employee,
+      basicSalary: +e.target.value,
+    });
+  }
+
+  const handleDeductionsChange=(e)=>{
+    setEmployee({
+      ...employee,
+      deductions: +e.target.value,
+    });
+  }
+
+  // const handleBasicAllowanceChange = (e) => {
+  //   setEmployee({
+  //     ...employee,
+  //     allowance: e.target.value,
+  //   });
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,11 +100,24 @@ const Add = () => {
         },
       });
       alert("Employee salary details added successfully");
-      navigate("/admin-dashboard/employees");
+      
     } catch (err) {
       console.error("Error adding employee salary data:", err);
     }
   };
+
+  const handleEmployeeChange=(e)=>{
+    const currentEmployee = employees.find(emp => emp._id == e.target.value);
+    console.log(currentEmployee)
+    setEmployee({
+      employeeId: currentEmployee._id,
+      basicSalary:currentEmployee.employeeId?.salaryId.basicSalary ?? 0 ,
+      allowance: currentEmployee.employeeId?.salaryId?.allowance ?? 0,
+      deductions: currentEmployee.employeeId?.salaryId?.deductions ?? 0,
+      department: currentEmployee.employeeId?.departmentId?.name ?? "",
+      payDate: null,
+    });
+  }
 
   return (
     <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
@@ -90,44 +125,41 @@ const Add = () => {
       <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
         <div>
           <label className="block mb-2">Department</label>
-          <select
+          <input
+             type="text"
             name="department"
             value={employee.department || ""}
+            readOnly
             onChange={handleDepartment}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
             required
-          >
-            <option value="">Select Department</option>
-            {department.map((dep) => (
-              <option key={dep._id} value={dep._id}>
-                {dep.dep_name}
-              </option>
-            ))}
-          </select>
+          />
+
         </div>
         <div>
           <label className="block mb-2">Employee</label>
           <select
             name="employeeId"
             value={employee.employeeId || ""}
-            onChange={handleChange}
+            onChange={handleEmployeeChange}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
             required
           >
             <option value="">Select Employee</option>
             {employees.map((emp) => (
               <option key={emp._id} value={emp._id}>
-                {emp.employeeId}
+                {emp._id}
               </option>
             ))}
           </select>
         </div>
         <div>
+          {console.log(employee)}
           <label className="block mb-2">Basic Salary</label>
           <input
             type="number"
             name="basicSalary"
-            value={employee.basicSalary || ""}
+            value={employee.basicSalary}
             onChange={handleChange}
             placeholder="Basic Salary"
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
@@ -135,12 +167,12 @@ const Add = () => {
           />
         </div>
         <div>
-          <label className="block mb-2">Allowances</label>
+          <label className="block mb-2">Allowances -{employee.allowance}</label>
           <input
             type="number"
             name="allowance"
-            value={employee.allowance || ""}
-            onChange={handleChange}
+            defaultValue={employee.allowance}
+            onChange={handleBasicAllowanceChange}
             placeholder="Allowances"
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
             required
@@ -151,8 +183,8 @@ const Add = () => {
           <input
             type="number"
             name="deductions"
-            value={employee.deductions || ""}
-            onChange={handleChange}
+            defaultValue={employee.deductions}
+            onChange={handleDeductionsChange}
             placeholder="Deductions"
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
             required
@@ -163,8 +195,13 @@ const Add = () => {
           <input
             type="date"
             name="payDate"
-            value={employee.payDate || ""}
-            onChange={handleChange}
+            defaultValue={employee.payDate}
+            onChange={(e)=>{
+              setEmployee({
+                ...employee,
+                payDate: e.target.value
+              })
+            }}
             className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
             required
           />

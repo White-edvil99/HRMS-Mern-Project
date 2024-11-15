@@ -24,6 +24,7 @@ import Setting from "./components/EmployeeDashboard/Setting";
 function App() {
   const user = useAuth();
   console.log(user)
+  console.log(user._id)
   
   return (
     <AuthProvider>
@@ -59,7 +60,7 @@ function App() {
             <Route path="leaves" element={<List />} />
           </Route>
 
-          {/* Protected Employee Dashboard route */}
+          {/* Protected Employee Dashboard route */}a
           <Route
             path="/employee-dashboard"
             element={

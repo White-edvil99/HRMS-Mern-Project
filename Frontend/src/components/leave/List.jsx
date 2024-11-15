@@ -1,25 +1,27 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext';
 
 const List = () => {
 
   let sno = 1;
-  const {user} = useParams();
+  const {user} = useAuth();
   const [leaves, setLeaves]= useState([]);
-  const [filteredLeaves, setFilteredLeaves] =useState([])
   const fetchLeaves = async ()=>{
+    console.log("inside req",user)
     try {
-      const response = await axios.get(`http://localhost:500/api/leave/${user._id}`,{
+      const response = await axios.get(`http://localhost:3000/api/leave/${user._id}`,{
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       });
+      console.log(response)
       if(response.data.success){
-          setLeaves(response.data.success);
-          setFilteredLeaves(response.data.leaves);
+          setLeaves(response.data.employee);
       }
     } catch (error) {
+      console.log(error)
       if(error.response && !error. response.data.success){
         console.error(error.message);
       }
@@ -28,7 +30,9 @@ const List = () => {
 
   useEffect (()=>{
     fetchLeaves();
-  },[]);
+  },[user?._id]);
+
+  console.log(leaves)
 
   return (
     <div className='p-6'>
@@ -60,11 +64,11 @@ const List = () => {
           </thead>
         <tbody>
         {leaves.map((leave)=>(
-            <tr key={leave._id} className='bg-white border-b dark:bg-gray-800 dark:border-gray-700'>
+            <tr key={leave._id} className='bg-white border-b'>
                   <td className='px-6 py-3'>{sno++}</td>
                   <td className='px-6 py-3'>{leave.leaveType}</td>
-                  <td className='px-6 py-3'>{new Date(leave.from).toLocaleDateString()}</td>
-                  <td className='px-6 py-3'>{new Date(leave.to).toLocaleDateString()}</td>
+                  <td className='px-6 py-3'>{new Date(leave.fromDate).toLocaleDateString()}</td>
+                  <td className='px-6 py-3'>{new Date(leave.toDate).toLocaleDateString()}</td>
                   <td className='px-6 py-3'>{leave.reason}</td>
                   <td className='px-6 py-3'>{leave.status}</td>
                   {/* <td className='px-6 py-3'>{new Date(leave.appliedDate).toLocaleDateString()}</td> */}

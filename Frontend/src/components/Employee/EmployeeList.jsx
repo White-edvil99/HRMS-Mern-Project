@@ -48,6 +48,8 @@ const EmployeeList = () => {
     employee.employeeId.includes(searchTerm)
   );
 
+  console.log(employees)
+
   return (
     <div className="container mx-auto p-4 md:p-8">
       <h2 className="text-3xl font-bold text-center mb-6">Manage Employees</h2>
@@ -82,7 +84,7 @@ const EmployeeList = () => {
           <tbody>
             {filteredEmployees.length > 0 ? (
               filteredEmployees.map((employee, index) => (
-                <tr key={employee._id} className="text-center">
+                <tr key={employee.user?._id} className="text-center">
                   <td className="py-2 px-4 border-b border-gray-200">
                     {index + 1}
                   </td>
@@ -90,10 +92,11 @@ const EmployeeList = () => {
                     {employee.employeeId || "N/A"}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200">
-                    {employee.name}
+                    {employee?.user?.name}
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200">
-                    {employee.department}
+                    {employee?.departmentId?.name}
+
                   </td>
                   <td className="py-2 px-4 border-b border-gray-200 space-x-2">
                     <button
@@ -114,7 +117,7 @@ const EmployeeList = () => {
                     </button>
                     <button className="bg-yellow-500 text-white px-3 py-1 rounded"
                      onClick={() =>
-                      navigate(`/admin-dashboard/employee/salary/${employee._id}`)
+                      navigate(`/admin-dashboard/employee/salary/${employee.salaryId?._id}`)
                     }
                     >
                       Salary

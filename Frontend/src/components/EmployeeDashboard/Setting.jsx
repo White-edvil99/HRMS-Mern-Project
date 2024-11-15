@@ -35,7 +35,7 @@ const Setting = () => {
           }
         );
         if (response.data.success) {
-          navigate("/admin-dashboard/employee");
+          // navigate("/admin-dashboard/employee");
           setError("");
         }
       } catch (error) {

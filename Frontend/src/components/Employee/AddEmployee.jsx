@@ -38,17 +38,51 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Create the form data object
     const formDataObj = new FormData();
-    Object.keys(formData).forEach((key) => {
-      formDataObj.append(key, formData[key]);
-    });
+  
+    // Prepare the data in the required format
+    const data = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      role: formData.role,
+      employInfo: {
+        dateOfBirth: formData.dateOfBirth,
+        gender: formData.gender,
+        maritalStatus: formData.maritalStatus,
+        designation: formData.designation,
+      },
+      departmentId: formData.department,
+      salaryInfo: {
+        salary: formData.salary,
+      },
+    };
+  
+    // Append the main data to the formDataObj
+    formDataObj.append("name", data.name);
+    formDataObj.append("email", data.email);
+    formDataObj.append("password", data.password);
+    formDataObj.append("role", data.role);
+  
+    // Append the nested objects as JSON strings
+    formDataObj.append("employInfo", JSON.stringify(data.employInfo));
+    formDataObj.append("departmentInfo", JSON.stringify(data.departmentInfo));
+    formDataObj.append("salaryInfo", JSON.stringify(data.salaryInfo));
+  
+    // If there's an image, append it as well
     if (image) {
-      formDataObj.append("image", image); // Append the image file to the FormData
+      formDataObj.append("image", image);
     }
-
+  
+    // Log the formDataObj to see the structure
+    console.log(data);
+  
+    // Now you can send the formDataObj to the backend (e.g., using axios or fetch)
+    // Example:
     try {
-      const response = await axios.post("http://localhost:3000/api/employees/add", formDataObj, {
+      const response = await axios.post("http://localhost:3000/api/employees/add", data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",
@@ -62,7 +96,6 @@ const AddEmployee = () => {
       alert("Failed to add employee.");
     }
   };
-
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Add New Employee</h2>
@@ -86,14 +119,6 @@ const AddEmployee = () => {
           />
         </div>
         <div style={styles.row}>
-          <input
-            type="text"
-            name="employeeId"
-            placeholder="Employee ID"
-            value={formData.employeeId}
-            onChange={handleChange}
-            style={styles.input}
-          />
           <input
             type="date"
             name="dateOfBirth"
@@ -132,8 +157,8 @@ const AddEmployee = () => {
           >
             <option value="">Select Department</option>
             {departments.map((dept) => (
-              <option key={dept._id} value={dept.dep_name}>
-                {dept.dep_name}
+              <option key={dept._id} value={dept._id}>
+                {dept.name}
               </option>
             ))}
           </select>
@@ -159,6 +184,7 @@ const AddEmployee = () => {
         <div style={styles.row}>
           <select name="role" value={formData.role} onChange={handleChange} style={styles.input}>
             <option value="">Select Role</option>
+            <option value="Employee">Employee</option>
             <option value="Manager">Manager</option>
             <option value="Developer">Developer</option>
             <option value="Designer">Designer</option>

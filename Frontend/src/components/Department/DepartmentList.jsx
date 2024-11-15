@@ -26,7 +26,7 @@ const DepartmentList = () => {
 
   // Filter departments based on search term
   const filteredDepartments = departments.filter((department) =>
-    department.dep_name.toLowerCase().includes(searchTerm.toLowerCase())
+    department.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -67,7 +67,7 @@ const DepartmentList = () => {
               {filteredDepartments.map((department, index) => (
                 <tr key={department._id} className="text-center">
                   <td className="py-2 px-4 border-b border-gray-200">{index + 1}</td>
-                  <td className="py-2 px-4 border-b border-gray-200">{department.dep_name}</td>
+                  <td className="py-2 px-4 border-b border-gray-200">{department.name}</td>
                   <td className="py-2 px-4 border-b border-gray-200">{department.description}</td>
                 </tr>
               ))}

@@ -12,8 +12,8 @@ const {
   deleteEmployee,
 } = require("../controller/EmployeeController");
 
-router.post("/add", verifyUser, upload.single("image"), addEmployee);
 router.get("/", getEmployees);
+router.post("/add", upload.single("image"), addEmployee);
 router.get("/department/:id", verifyUser, fetchEmployeesByIdDepId);
 router.get("/view/:id", fetchEmployeeById); // Route to fetch employee by `_id`
 router.put("/:id", upload.single("image"), editEmployee); // Fixed route

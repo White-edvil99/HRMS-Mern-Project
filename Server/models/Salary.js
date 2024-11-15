@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const salarySchema = new Schema({
-  employeeId: { type: String, required: true, unique: true },
+  employeeId: { type: mongoose.Types.ObjectId, ref:"Employee", required: true },
   basicSalary: { type: Number, required: true },
-  allowance:{type:Number, required:true},
+  allowance:{type:Number,},
   deductions:{type:Number},
   netSalary:{type:Number},
-  payDate:{type:Date,required:true},
+  payDate:{type:Date}, 
   createAt:{type:Date, default:Date.now},
   updateAt:{type:Date, default:Date.now},
 });

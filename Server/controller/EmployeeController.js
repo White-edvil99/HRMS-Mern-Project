@@ -3,6 +3,8 @@ const Employee = require("../models/EmployeeModel");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const path = require("path");
+const Salary = require("../models/Salary");
+const DepartmentModel = require("../models/DepartmentModel");
 
 // Storage configuration for multer
 const storage = multer.diskStorage({
@@ -23,26 +25,38 @@ const addEmployee = async (req, res) => {
     const {
       name,
       email,
-      employeeId,
-      dateOfBirth,
-      gender,
-      maritalStatus,
-      designation,
-      department,
-      salary,
       password,
       role,
+      employInfo,
+      departmentId,
+      salaryInfo,
+      leaveInfo
     } = req.body;
 
-    const user = await User.findOne({ email });
-    if (user) {
-      return res
-        .status(400)
-        .json({ success: false, error: "User already registered as employee" });
+    const { 
+      dateOfBirth, 
+      gender, 
+      maritalStatus, 
+      designation, 
+    } = employInfo;
+
+    const {
+      salary      
+    } = salaryInfo
+
+ 
+    console.log("=================INSIDE EMP")
+
+    // Check if a user with the given email already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ success: false, error: "User already registered as employee" });
     }
 
+    // Hash the password
     const hashPassword = await bcrypt.hash(password, 10);
 
+    // Create a new User document
     const newUser = new User({
       name,
       email,
@@ -51,37 +65,64 @@ const addEmployee = async (req, res) => {
       profileImage: req.file ? req.file.filename : "",
     });
 
-    const savedUser = await newUser.save();
+ 
+    const newSalary = new Salary({
+      basicSalary: salary,
+      employeeId: newUser._id
+    })
 
+
+    console.log("emp==============",newUser)
+
+    // Create a new Employee document with a reference to the created User
     const newEmployee = new Employee({
-      name: savedUser.name,
-      employeeId,
-      email,
+      user: newUser._id, // Reference to the User document
       dateOfBirth,
       gender,
       maritalStatus,
       designation,
-      department,
-      salary,
-      password: hashPassword,
-      role,
+      role: role.toLowerCase(),
       image: req.file ? req.file.filename : "",
+
+      departmentId,
+      salaryId: newSalary._id ,
+      leaveId: null,
+
     });
 
+    // Save the Employee document
+    await newUser.save();
     await newEmployee.save();
+    await newSalary.save();
+
+
+    // Optionally handle departmentInfo, salaryInfo, and leaveInfo here (if necessary)
+    // For now, they can be null, but if you need them, you can save them as separate documents or associate them with the employee.
+
+    // Update the User's employeeId to reference the created Employee
+    newUser.employeeId = newEmployee._id;
+
+    // Save the updated User document
+    await newUser.save();
+
     return res.status(200).json({ success: true, message: "Employee created" });
   } catch (error) {
     console.error("Error adding employee:", error.message);
-    res
-      .status(500)
-      .json({ success: false, error: "Server error in adding employee" });
+    res.status(500).json({ success: false, error: "Server error in adding employee" });
   }
 };
 
+
 // Get all employees
 const getEmployees = async (req, res) => {
+  console.log("get======")
   try {
-    const employees = await Employee.find();
+    const employees = await Employee.find()
+    .populate('departmentId')
+    .populate('user')
+    .populate('salaryId')
+    .populate('leaveId');
+;
     return res.status(200).json({
       success: true,
       data: employees,
@@ -127,7 +168,7 @@ const editEmployee = async (req, res) => {
         .json({ success: false, error: "employee not found" });
     }
 
-    const user = await User.findById({ _id: employee.userId });
+    const user = await User.findById({ _id: employee.user});
 
     if (!user) {
       return res.status(404).json({ success: false, error: "user not found" });

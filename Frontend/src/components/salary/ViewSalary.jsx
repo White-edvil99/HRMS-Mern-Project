@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+
 const ViewSalary = () => {
   const { id } = useParams();
-  const [salaryData, setSalaryData] = useState(null);
+  const [salaryData, setSalaryData] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSalaryDetails = async () => {
+      console.log("=========heloo salary start")
       try {
         const response = await axios.get(
           `http://localhost:3000/api/salary/${id}`, // Replace with actual endpoint
@@ -18,7 +20,10 @@ const ViewSalary = () => {
             },
           } 
         );
-        setSalaryData(response.data);
+        console.log(response)
+        console.log("========salary end")
+
+        setSalaryData(response.data.salary);
       } catch (err) {
         console.error("Error fetching salary details", err);
       }
@@ -67,14 +72,16 @@ const ViewSalary = () => {
             {salaryData.map((salary, index) => (
               <tr key={salary._id} className="border-b border-gray-200">
                 <td className="py-2 px-4 text-sm text-gray-700">{index + 1}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.empId}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeName}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.salary}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.basicSalary}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.allowance}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.deduction}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.total}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.payDate}</td>
-              </tr>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.deductions}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.netSalary}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">
+                  {new Date(salary.payDate).toLocaleDateString()}
+                </td>
+                 </tr>
             ))}
           </tbody>
         </table>

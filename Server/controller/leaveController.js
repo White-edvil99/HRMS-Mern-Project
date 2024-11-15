@@ -1,31 +1,51 @@
 
 const EmployeeModel = require("../models/EmployeeModel")
-const Leave = require("../models/Leave")
+const Leave = require("../models/Leave");
+const User = require("../models/User");
 
-const  addLeave = async (req,res)=>{
+// Add Leave function
+const addLeave = async (req, res) => {
     try {
-        const { userId, leaveType, fromDate, toDate,reason} = req.body
-        const employee = await EmployeeModel.findOne({userId})
+      const { id } = req.params;  // Employee ID
+      const { leaveType, fromDate, toDate, reason } = req.body;
 
-        const newLeave = new Leave({
-            employeeid:employee, leaveType, fromDate, toDate,reason
-        })
+      console.log("========================>leave api",leaveType, fromDate, toDate, reason)
 
-        await newLeave.save()
-        return res.status(200).json({success:true})
+      const emp = await User.find({
+        _id: id
+      })
+
+      if(!emp) {
+        return res.status(404).json({ message: "Employee not found" });
+      }
+      
+      console.log(emp);
+
+      const newLeave = new Leave({
+        employeeId: id,
+        leaveType,
+        fromDate,
+        toDate,
+        reason,
+      });
+  
+      await newLeave.save();
+      
+  
+      return res.status(200).json({ success: true, message: "Leave request added" });
     } catch (error) {
-        return res.status(500).json({
-            success: false, error:"newLeave add server error"
-        })
+      console.error("Error adding leave:", error.message);
+      res.status(500).json({ success: false, error: "Server error in adding leave" });
     }
-}
+  };
+  
 
 const getLeaves = async (req, res)=>{
     try {
         const  {id} = req.params;
-        const employee = await EmployeeModel.findOne({userId: id})
-        const leaves = await Leave.find({employeeId: employee._id})
-        return res.status(200).json({success:true, leaves})
+        console.log("============leave id",id)
+        const employee = await Leave.find({employeeId: id})
+        return res.status(200).json({success:true, employee})
     } catch (error) {
         console.log(error.message)
         return res.status(500).json({success:false, error:"leave add server error"})

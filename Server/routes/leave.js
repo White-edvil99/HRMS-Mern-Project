@@ -5,7 +5,7 @@ const departmentRouter = express.Router();
 
 const router = express.Router()
 
-router.post('./add', verifyUser, addLeave);
-router.get('./:id', verifyUser, getLeaves);
+router.post('/add/:id', verifyUser, addLeave);
+router.get('/:id', getLeaves);
 
 module.exports = router;

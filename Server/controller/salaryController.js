@@ -11,17 +11,34 @@ const addSalary = async (req, res) => {
     const totalSalary =
       parseInt(basicSalary) + parseInt(allowance) - parseInt(deductions);
 
-    const newSalary = new Salary({
-      employeeId,
-      basicSalary,
-      allowance,
-      deductions,
-      netSalary: totalSalary,
-      payDate,
-    });
+    // check if there is an alread salary of a employee, if there is, update that, otherwise create new salary 
 
-    await newSalary.save();
-    return res.status(200).json({ success: true });
+    const existingSalary = await Salary.findOne({employeeId});
+    if(existingSalary) {
+      //updating the existing salary reocrd
+      existingSalary.basicSalary = basicSalary;
+      existingSalary.allowance = allowance;
+      existingSalary.deductions = deductions;
+      existingSalary.netSalary = totalSalary;
+      existingSalary.payDate = payDate;
+      
+      await existingSalary.save();
+      return res.status(200).json({success: true, message:"salary updated successfully"});
+
+    }else{
+      const newSalary = new Salary({
+        employeeId,
+        basicSalary,
+        allowance,
+        deductions,
+        netSalary: totalSalary,
+        payDate,
+      });
+      
+      await newSalary.save();
+    return res.status(200).json({ success: true, message:"salary added successfully" });
+    }
+  
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -36,7 +53,7 @@ const getSalary = async (req,res)=>{
     try {
         const {id} = req.params;
         console.log("emp id=============>",id)
-        const salary = await Salary.find({employeeId: id});
+        const salary = await Salary.find({_id: id});
         console.log("salary ==============>",salary)
         return res.status(200).json({success: true, salary})
 
