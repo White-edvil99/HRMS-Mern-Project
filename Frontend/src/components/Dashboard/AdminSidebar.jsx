@@ -53,7 +53,7 @@ const AdminSidebar = () => {
         </NavLink>
 
         <NavLink
-          to="/leave"
+          to="/admin-dashboard/leaves"
           className={({ isActive }) =>
             `flex items-center gap-2 px-4 py-3 rounded-lg ${
               isActive ? "bg-gray-200 text-blue-500 font-semibold" : "hover:bg-gray-100"

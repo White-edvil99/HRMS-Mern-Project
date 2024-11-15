@@ -4,7 +4,7 @@ const User = require('../models/User');
 const verifyUser = async (req, res, next) => {
     try {
         console.log("Verifying token...");
-        // console.log(req.headers)
+        console.log(req.headers?.authorization)
         if(!req.headers?.authorization){
             return res.status(404).json({ success: false, error: "Token not provided" });
 

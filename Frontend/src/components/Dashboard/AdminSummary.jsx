@@ -10,7 +10,7 @@ const AdminSummary = () => {
   const [employeeCount, setEmployeeCount] = useState(0);
   const [summary, setSummary] = useState(null);
 
-  //fetch details from server 
+  //fetch details from server   
   useEffect (()=>{
     const fetchSummary = async ()=>{
       try {

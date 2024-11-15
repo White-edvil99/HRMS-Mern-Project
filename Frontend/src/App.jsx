@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AuthProvider from "./context/AuthContext";
+import AuthProvider, { useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import PrivateRoutes from "./utils/PrivateRoutes";
@@ -22,6 +22,9 @@ import ViewSalary from "./components/salary/ViewSalary";
 import Setting from "./components/EmployeeDashboard/Setting";
 
 function App() {
+  const user = useAuth();
+  console.log(user)
+  
   return (
     <AuthProvider>
       <BrowserRouter>
@@ -53,6 +56,7 @@ function App() {
             <Route path="employee/view/:id" element={<EmployeeDetails />} />
             <Route path="employee/salary/:id" element={<ViewSalary />} />
             <Route path="salary/add" element={<Add />} />
+            <Route path="leaves" element={<List />} />
           </Route>
 
           {/* Protected Employee Dashboard route */}

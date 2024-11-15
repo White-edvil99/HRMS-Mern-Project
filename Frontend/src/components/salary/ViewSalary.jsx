@@ -13,12 +13,12 @@ const ViewSalary = () => {
     const fetchSalaryDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/salaries/${id}`, // Replace with actual endpoint
+          `http://localhost:3000/api/salary/${id}`, // Replace with actual endpoint
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          }
+          } 
         );
         setSalaryData(response.data);
         // if(!Salary || Salary.length < 1){
