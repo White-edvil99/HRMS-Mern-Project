@@ -71,7 +71,7 @@ const List = () => {
                   <td className='px-6 py-3'>{new Date(leave.toDate).toLocaleDateString()}</td>
                   <td className='px-6 py-3'>{leave.reason}</td>
                   <td className='px-6 py-3'>{leave.status}</td>
-                  {/* <td className='px-6 py-3'>{new Date(leave.appliedDate).toLocaleDateString()}</td> */}
+                  <td className='px-6 py-3'>{new Date(leave.appliedDate).toLocaleDateString()}</td>
             </tr>
         ))}
         </tbody>
