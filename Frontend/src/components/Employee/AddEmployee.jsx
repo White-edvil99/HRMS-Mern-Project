@@ -38,7 +38,6 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     // Create the form data object
     const formDataObj = new FormData();
   
@@ -54,7 +53,9 @@ const AddEmployee = () => {
         maritalStatus: formData.maritalStatus,
         designation: formData.designation,
       },
-      departmentId: formData.department,
+      departmentInfo :{
+        departmentId: formData.department,
+      },
       salaryInfo: {
         salary: formData.salary,
       },
@@ -88,6 +89,7 @@ const AddEmployee = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("=====> hey",response)
       if (response.data.success) {
         navigate("/admin-dashboard/employee");
       }

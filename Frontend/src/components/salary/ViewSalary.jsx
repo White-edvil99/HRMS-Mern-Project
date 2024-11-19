@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 const ViewSalary = () => {
   const { id } = useParams();
   const [salaryData, setSalaryData] = useState([]);
@@ -10,7 +9,7 @@ const ViewSalary = () => {
 
   useEffect(() => {
     const fetchSalaryDetails = async () => {
-      console.log("=========heloo salary start")
+      console.log("=========hello salary start");
       try {
         const response = await axios.get(
           `http://localhost:3000/api/salary/${id}`, // Replace with actual endpoint
@@ -18,12 +17,18 @@ const ViewSalary = () => {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
-          } 
+          }
         );
-        console.log(response)
-        console.log("========salary end")
+        console.log(response);
+        console.log("========salary end");
 
-        setSalaryData(response.data.salary);
+        // Ensure that salaryData is always an array
+        const data = response.data.salary;
+        if (Array.isArray(data)) {
+          setSalaryData(data); // Set as an array if it's already an array
+        } else {
+          setSalaryData([data]); // Wrap it in an array if it's a single object
+        }
       } catch (err) {
         console.error("Error fetching salary details", err);
       }
@@ -32,7 +37,8 @@ const ViewSalary = () => {
     fetchSalaryDetails();
   }, [id]);
 
-  if (!salaryData) {
+  // If no salary data, show a message
+  if (salaryData.length === 0) {
     return (
       <div className="flex w-full h-screen text-center justify-center">
         <h2 className="text-3xl text-red-600">Salary data not found</h2>
@@ -72,7 +78,7 @@ const ViewSalary = () => {
             {salaryData.map((salary, index) => (
               <tr key={salary._id} className="border-b border-gray-200">
                 <td className="py-2 px-4 text-sm text-gray-700">{index + 1}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary._id}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeName}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.basicSalary}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.allowance}</td>
@@ -81,7 +87,7 @@ const ViewSalary = () => {
                 <td className="py-2 px-4 text-sm text-gray-700">
                   {new Date(salary.payDate).toLocaleDateString()}
                 </td>
-                 </tr>
+              </tr>
             ))}
           </tbody>
         </table>

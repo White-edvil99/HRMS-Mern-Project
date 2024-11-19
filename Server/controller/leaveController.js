@@ -40,16 +40,38 @@ const addLeave = async (req, res) => {
   };
   
 
-const getLeaves = async (req, res)=>{
+  const getLeaves = async (req,res)=>{
     try {
-        const  {id} = req.params;
-        console.log("============leave id",id)
-        const employee = await Leave.find({employeeId: id})
-        return res.status(200).json({success:true, employee})
+        const {id} = req.params;
+        const userRole = req.user.role;
+
+        let leaves;
+        if(userRole === "admin"){
+            leaves = await Leave.find().populate('employeeId', 'name email');
+        } else if(userRole === 'manager'){
+            leaves = await Leave.find({managerId: id}).populate('employeeId', 'name email')
+        } else {
+            leaves = await Leave.find({
+                employeeId: id
+            });
+        }
+        res.status(200).json({success: true, leaves});
     } catch (error) {
-        console.log(error.message)
-        return res.status(500).json({success:false, error:"leave add server error"})
+        console.error(error);
+        res.status(500).json({success: false, message: 'Error fatching leaves'})
     }
-}
+  }
+
+// const getLeaves = async (req, res)=>{
+//     try {
+//         const  {id} = req.params;
+//         console.log("============leave id",id)
+//         const employee = await Leave.find({employeeId: id})
+//         return res.status(200).json({success:true, employee})
+//     } catch (error) {
+//         console.log(error.message)
+//         return res.status(500).json({success:false, error:"leave add server error"})
+//     }
+// }
 
 module.exports = {addLeave, getLeaves};

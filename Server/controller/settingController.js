@@ -22,7 +22,7 @@ const changePassword = async (req, res) => {
 
         return res.status(200).json({ success: true })
     } catch (error) {
-        response.status(500).json({ success: false, error: "setting error" })
+        res.status(500).json({ success: false, error: "setting error" })
     }
 }
 

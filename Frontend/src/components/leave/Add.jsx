@@ -33,11 +33,10 @@ const AddLeave = () => {
         navigate('/employee-dashboard/leaves');
       }
 
-      response.save()
-      
     } catch (err) {
+      // console.log(err)
       console.error("Error adding leave request", err);
-      alert("Failed to add leave request. Please try again.");
+      
     }
   };
 

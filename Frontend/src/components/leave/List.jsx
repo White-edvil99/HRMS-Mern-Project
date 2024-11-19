@@ -8,6 +8,7 @@ const List = () => {
   let sno = 1;
   const {user} = useAuth();
   const [leaves, setLeaves]= useState([]);
+
   const fetchLeaves = async ()=>{
     console.log("inside req",user)
     try {
@@ -18,7 +19,7 @@ const List = () => {
       });
       console.log(response)
       if(response.data.success){
-          setLeaves(response.data.employee);
+          setLeaves(response.data.leaves);
       }
     } catch (error) {
       console.log(error)
@@ -42,6 +43,8 @@ const List = () => {
             </h3>
         </div>
         <div className='flex justify-between items-center'>
+
+          {/* search bar */}
             <input type="text" placeholder='Search By Dep Name' className='px-4 py-0.5 border' />
             <Link
                     to="/employee-dashboard/add-leave"
@@ -54,6 +57,7 @@ const List = () => {
           <thead className='text-xs text-gray-700 uppercase bg-gray-50 border border-gray-200'>
               <tr>
                 <th className='px-6 py-3'>SNO.</th>
+                <th className='px-6 py-3'>Employee Name</th>
                 <th className='px-6 py-3'>Leave Type</th>
                 <th className='px-6 py-3'>From</th>
                 <th className='px-6 py-3'>To</th>
@@ -66,12 +70,13 @@ const List = () => {
         {leaves.map((leave)=>(
             <tr key={leave._id} className='bg-white border-b'>
                   <td className='px-6 py-3'>{sno++}</td>
+                  <td className='px-6 py-3'>{leave.employeeId}</td>
                   <td className='px-6 py-3'>{leave.leaveType}</td>
                   <td className='px-6 py-3'>{new Date(leave.fromDate).toLocaleDateString()}</td>
                   <td className='px-6 py-3'>{new Date(leave.toDate).toLocaleDateString()}</td>
                   <td className='px-6 py-3'>{leave.reason}</td>
                   <td className='px-6 py-3'>{leave.status}</td>
-                  {/* <td className='px-6 py-3'>{new Date(leave.appliedDate).toLocaleDateString()}</td> */}
+                  <td className='px-6 py-3'>{new Date(leave.appliedDate).toLocaleDateString()}</td>
             </tr>
         ))}
         </tbody>

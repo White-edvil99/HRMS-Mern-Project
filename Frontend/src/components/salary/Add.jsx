@@ -40,6 +40,7 @@ const Add = () => {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+        console.log(response)
         setEmployees(response.data.data); // Assuming `response.data.data` contains the list of departments
       } catch (error) {
         console.error("Error fetching employees:", error);
@@ -84,12 +85,6 @@ const Add = () => {
     });
   }
 
-  // const handleBasicAllowanceChange = (e) => {
-  //   setEmployee({
-  //     ...employee,
-  //     allowance: e.target.value,
-  //   });
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,10 +102,10 @@ const Add = () => {
   };
 
   const handleEmployeeChange=(e)=>{
-    const currentEmployee = employees.find(emp => emp._id == e.target.value);
+    const currentEmployee = employees.find(emp => emp.name == e.target.value);
     console.log(currentEmployee)
     setEmployee({
-      employeeId: currentEmployee._id,
+      employeeId: currentEmployee.name,
       basicSalary:currentEmployee.employeeId?.salaryId.basicSalary ?? 0 ,
       allowance: currentEmployee.employeeId?.salaryId?.allowance ?? 0,
       deductions: currentEmployee.employeeId?.salaryId?.deductions ?? 0,
@@ -147,8 +142,8 @@ const Add = () => {
           >
             <option value="">Select Employee</option>
             {employees.map((emp) => (
-              <option key={emp._id} value={emp._id}>
-                {emp._id}
+              <option key={emp.name} value={emp.name}>
+                {emp.name}
               </option>
             ))}
           </select>

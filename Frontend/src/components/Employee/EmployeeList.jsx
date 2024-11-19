@@ -28,19 +28,26 @@ const EmployeeList = () => {
 
   const deleteEmployee = async (employeeId) => {
     try {
+      // Call the API to delete the employee
       const response = await axios.delete(`http://localhost:3000/api/employees/${employeeId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
   
+      // Check if the delete request was successful
       if (response.status === 200) {
+        // Remove the employee from the local state (UI update)
         setEmployees(employees.filter(employee => employee._id !== employeeId));
+      } else {
+        console.error("Failed to delete employee from the database.");
       }
     } catch (error) {
-      console.error("Error deleting employee", error);
+      console.error("Error deleting employee:", error);
+      // Optionally, show a user-friendly error message
     }
   };
+  
   
   
 

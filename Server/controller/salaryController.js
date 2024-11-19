@@ -11,21 +11,22 @@ const addSalary = async (req, res) => {
     const totalSalary =
       parseInt(basicSalary) + parseInt(allowance) - parseInt(deductions);
 
-    // check if there is an alread salary of a employee, if there is, update that, otherwise create new salary 
+    // check if there is an alread salary of a employee, if there is, update that, otherwise create new salary
 
-    const existingSalary = await Salary.findOne({employeeId});
-    if(existingSalary) {
+    const existingSalary = await Salary.findOne({ employeeId });
+    if (existingSalary) {
       //updating the existing salary reocrd
       existingSalary.basicSalary = basicSalary;
       existingSalary.allowance = allowance;
       existingSalary.deductions = deductions;
       existingSalary.netSalary = totalSalary;
       existingSalary.payDate = payDate;
-      
-      await existingSalary.save();
-      return res.status(200).json({success: true, message:"salary updated successfully"});
 
-    }else{
+      await existingSalary.save();
+      return res
+        .status(200)
+        .json({ success: true, message: "salary updated successfully" });
+    } else {
       const newSalary = new Salary({
         employeeId,
         basicSalary,
@@ -34,11 +35,12 @@ const addSalary = async (req, res) => {
         netSalary: totalSalary,
         payDate,
       });
-      
+
       await newSalary.save();
-    return res.status(200).json({ success: true, message:"salary added successfully" });
+      return res
+        .status(200)
+        .json({ success: true, message: "salary added successfully" });
     }
-  
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -48,22 +50,38 @@ const addSalary = async (req, res) => {
   }
 };
 
+const getSalary = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userRole = req.user.role;
 
-const getSalary = async (req,res)=>{
-    try {
-        const {id} = req.params;
-        console.log("emp id=============>",id)
-        const salary = await Salary.find({_id: id});
-        console.log("salary ==============>",salary)
-        return res.status(200).json({success: true, salary})
-
-    } catch (error) {
-      return res.status(500).json({success: false,error: "salary get server error in fetching employee salary data"})
+    let salaryData;
+    if (userRole === "admin") {
+      salaryData = await Salary.find().populate(
+        "employeeId",
+        "name email salary"
+      );
+    } else if (userRole === "employee") {
+      salaryData = await Salary.findOne({ employeeId: id }).populate(
+        "employeeId",
+        "name email salary"
+      );
+    } else {
+      return res
+        .status(403)
+        .json({ success: false, message: "Unauthorized access" });
     }
-}
+    res.status(200).json({ success: true, salary: salaryData });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching salary details" });
+  }
+};
 
 // module.exports= {addSalary};
 module.exports = {
-    addSalary,
-    getSalary
-}
+  addSalary,
+  getSalary,
+};

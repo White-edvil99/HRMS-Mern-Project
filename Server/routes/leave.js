@@ -6,6 +6,6 @@ const departmentRouter = express.Router();
 const router = express.Router()
 
 router.post('/add/:id', verifyUser, addLeave);
-router.get('/:id', getLeaves);
+router.get('/:id', verifyUser,getLeaves);
 
 module.exports = router;
