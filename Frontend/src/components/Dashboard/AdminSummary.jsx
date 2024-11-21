@@ -7,6 +7,7 @@ import axios from "axios";
 const AdminSummary = () => {
   const [departmentCount, setDepartmentCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
+  const [salaryCount, setSalaryCount] = useState(0);
 
   // Fetch department count
   useEffect(() => {
@@ -46,6 +47,24 @@ const AdminSummary = () => {
     fetchEmployeeCount();
   }, []);
 
+  useEffect(() => {
+    const fetchSalaryCount = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/salary", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        // Assume that response.data.data holds the department list
+        setSalaryCount(response.data.data.length);
+      } catch (error) {
+        console.error("Error fetching department count data", error);
+      }
+    };
+    fetchSalaryCount();
+  }, []); 
+
   return (
     <div className="space-y-8 p-6">
       {/* Dashboard Overview Section */}
@@ -67,7 +86,7 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<FaMoneyBillWave className="text-yellow-500 text-3xl" />}
             text="Monthly Pay"
-            number={50000}
+            number={salaryCount}
           />
         </div>
       </div>

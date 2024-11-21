@@ -72,7 +72,7 @@ function App() {
             }
           >
             <Route index element={<Summary />} />
-            <Route path="profile/:id" element={<EmployeeDetails />} />
+            <Route path="/employee-dashboard/profile/:id" element={<EmployeeDetails />} />
             <Route path="leaves" element={<List />} />
             <Route path="add-leave" element={<AddLeave />} />
             <Route path="/employee-dashboard/salary/:id" element={<ViewSalary />} />
