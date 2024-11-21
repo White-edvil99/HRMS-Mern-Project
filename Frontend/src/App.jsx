@@ -57,6 +57,7 @@ function App() {
             <Route path="employee/salary/:id" element={<ViewSalary />} />
             <Route path="salary/add" element={<Add />} />
             <Route path="leaves" element={<List />} />
+            <Route path="settings" element={<Setting />} />
           </Route>
 
           {/* Protected Employee Dashboard route */}a

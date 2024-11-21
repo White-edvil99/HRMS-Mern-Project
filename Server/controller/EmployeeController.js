@@ -28,8 +28,8 @@ const addEmployee = async (req, res) => {
       password,
       role,
       employInfo,
-      departmentId,
       salaryInfo,
+      departmentInfo,
       leaveInfo
     } = req.body;
 
@@ -40,12 +40,15 @@ const addEmployee = async (req, res) => {
       designation, 
     } = employInfo;
 
+    const {departmentId} = departmentInfo
+
     const {
       salary      
     } = salaryInfo
+    
 
  
-    console.log("=================INSIDE EMP")
+    console.log("=================INSIDE EMP",departmentId)
 
     // Check if a user with the given email already exists
     const userExists = await User.findOne({ email });
@@ -111,6 +114,48 @@ const addEmployee = async (req, res) => {
     res.status(500).json({ success: false, error: "Server error in adding employee" });
   }
 };
+
+// const getEmployeeById = async (req, res) =>{
+
+// }
+// Fetch a specific employee by ID
+const getEmployeeById = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the employee ID from the request parameters
+
+    // Find the employee by ID and populate related fields
+    const employee = await Employee.findById(id)
+      .populate("user") // Populate the user reference
+      .populate("salaryId") // Populate the salary reference
+      .populate("departmentId") // Populate the department reference
+      .populate("leaveId"); // Populate the leave reference (if applicable)
+
+    // Check if the employee exists
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    // Return the employee details in the response
+    return res.status(200).json({
+      success: true,
+      data: employee,
+      message: "Successfully fetched employee details",
+    });
+  } catch (error) {
+    console.error("Error fetching employee by ID:", error.message);
+
+    // Handle any server errors
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Server error in fetching employee by ID",
+    });
+  }
+};
+
 
 
 // Get all employees
@@ -257,4 +302,5 @@ module.exports = {
   editEmployee,
   deleteEmployee,
   fetchEmployeesByIdDepId,
+  getEmployeeById
 };

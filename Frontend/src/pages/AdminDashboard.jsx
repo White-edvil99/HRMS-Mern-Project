@@ -8,13 +8,15 @@ const AdminDashboard = () => {
     const { user } = useAuth();
 
     return (
-        <div className="flex">
-            <Sidebar />
-            <div className="flex-1 bg-gray-100 h-screen w-full">
-                <Navbar />
-                <Outlet />
+       <>
+        <Navbar />
+        <div className="flex pt-16">
+        <Sidebar />
+            <div className="flex-1 bg-gray-100 h-screen w-full ml-auto">     
+            <Outlet />
             </div>
         </div>
+       </>
     );
 };
 

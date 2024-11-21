@@ -16,7 +16,7 @@ import { useAuth } from "../../context/AuthContext";
 const Sidebar = () => {
   const {user} = useAuth();
   return (
-    <div className="w-72 h-screen bg-white text-gray-800 p-5 shadow-lg">
+    <div className="fixed w-72 h-screen bg-white text-gray-800 p-5 shadow-lg">
       <div className="mb-6">
         <h3 className="text-2xl font-bold text-gray-700">Rc Employee MS</h3>
       </div>
@@ -34,7 +34,7 @@ const Sidebar = () => {
         </NavLink>
 
         <NavLink
-          to={`/admin-dashboard/porfile/${user._id}`}
+          to={`/employee-dashboard/profile/${user._id}`}
           className={({ isActive }) =>
             `flex items-center gap-2 px-4 py-3 rounded-lg ${
               isActive ? "bg-gray-200 text-blue-500 font-semibold" : "hover:bg-gray-100"

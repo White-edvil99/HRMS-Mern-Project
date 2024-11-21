@@ -45,6 +45,7 @@ const ViewSalary = () => {
       </div>
     );
   }
+console.log(salaryData)
 
   return (
     <div className="container mx-auto p-6">
@@ -79,8 +80,9 @@ const ViewSalary = () => {
               <tr key={salary._id} className="border-b border-gray-200">
                 <td className="py-2 px-4 text-sm text-gray-700">{index + 1}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary._id}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeName}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.basicSalary}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.name}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId?.salaryId?.basicSalary
+                }</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.allowance}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.deductions}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.netSalary}</td>
@@ -88,6 +90,7 @@ const ViewSalary = () => {
                   {new Date(salary.payDate).toLocaleDateString()}
                 </td>
               </tr>
+              // check the response on chrome to convert allowance , dedutions netSalary 
             ))}
           </tbody>
         </table>

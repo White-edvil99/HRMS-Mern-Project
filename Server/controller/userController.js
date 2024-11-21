@@ -58,6 +58,65 @@ const addUser = async (req, res) => {
   }
 };
 
+
+// const changePasswordById = async (req, res)=>{
+
+// }
+
+const changePasswordById = async (req, res) => {
+  try {
+    const { userId } = req.params; // Get userId from URL params
+    const { currentPassword, newPassword } = req.body; // Get current and new password from the request body
+    console.log("useriD",userId)
+    // Validate inputs
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: "Current password and new password are required.",
+      });
+    }
+
+    // Find the user by their ID
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: "User not found.",
+      });
+    }
+
+    // Compare current password with the one stored in the database
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        error: "Current password is incorrect.",
+      });
+    }
+
+    // Hash the new password
+    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the password in the database
+    user.password = hashNewPassword;
+    await user.save();
+    console.log(userId);
+
+    // Return success response
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully.",
+    });
+    
+  } catch (error) {
+    console.error("Error changing password:", error.message);
+    return res.status(500).json({
+      success: false,
+      error: "Server error while changing the password.",
+    });
+  }
+};
+
 const getUserByRole = async (req, res) => {
     try {
       const { role } = req.params; // Get the role from the URL params
@@ -104,5 +163,6 @@ const getUserByRole = async (req, res) => {
 
 module.exports = {
     addUser,
-    getUserByRole
+    getUserByRole,
+    changePasswordById
 }

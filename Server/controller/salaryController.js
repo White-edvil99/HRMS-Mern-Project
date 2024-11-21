@@ -1,4 +1,5 @@
 const Salary = require("../models/Salary");
+const User = require("../models/User");
 
 // controllers/salaryController.js
 const addSalary = async (req, res) => {
@@ -55,12 +56,19 @@ const getSalary = async (req, res) => {
     const { id } = req.params;
     const userRole = req.user.role;
 
+    console.log("ROLE==========",userRole)
+
     let salaryData;
     if (userRole === "admin") {
-      salaryData = await Salary.find().populate(
-        "employeeId",
-        "name email salary"
-      );
+      salaryData = await User.findOne({
+        _id: id
+      }).populate({
+        path: 'employeeId', // Populating employeeId
+        populate: [
+          { path: 'departmentId' }, // Populating departmentId inside employeeId
+          { path: 'salaryId' }, // Populating salaryId inside employeeId
+        ]
+      });
     } else if (userRole === "employee") {
       salaryData = await Salary.findOne({ employeeId: id }).populate(
         "employeeId",

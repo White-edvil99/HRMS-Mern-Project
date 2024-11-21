@@ -12,11 +12,13 @@ const Edit = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
+        
         const response = await axios.get("http://localhost:3000/api/departments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
+       
         setDepartments(response.data.data);
       } catch (error) {
         console.error("Failed to fetch departments:", error);
@@ -25,11 +27,14 @@ const Edit = () => {
     fetchDepartments();
   }, []);
 
+  console.log("department response ============> ", departments)
+
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/employees/edit/${id}`);
+        const response = await axios.get(`http://localhost:3000/api/employees/${id}`);
         setEmployee(response.data.data);
+        console.log("Fetched employee:", response.data.data);
       } catch (err) {
         console.error("Error fetching employee data", err);
       }
@@ -39,8 +44,18 @@ const Edit = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEmployee({ ...employee, [name]: value });
+    const selectedDepartment = departments.find(dep=>dep._id === value);
+    
+    setEmployee({ ...employee, departmentId: {
+      ...selectedDepartment
+    } });
+    
   };
+
+  useEffect(()=>{
+
+    console.log("employee" , employee);
+  },[employee])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,8 +68,10 @@ const Edit = () => {
       formDataObj.append("image", image);
     }
 
+
+    
     try {
-      const response = await axios.post(`http://localhost:3000/api/employees/${id}`, formDataObj, {
+      const response = await axios.put(`http://localhost:3000/api/employees/${id}`, formDataObj, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           // "Content-Type": "multipart/form-data",
@@ -80,7 +97,7 @@ const Edit = () => {
                 type="text"
                 name="name"
                 placeholder="Name"
-                value={employee.name || ""}
+                defaultValue={employee.user?.name || ""}
                 onChange={handleChange}
                 style={styles.input}
               />
@@ -91,6 +108,7 @@ const Edit = () => {
                 name="employeeId"
                 placeholder="Employee ID"
                 value={employee.employeeId || ""}
+                readOnly
                 onChange={handleChange}
                 style={styles.input}
               />
@@ -123,16 +141,17 @@ const Edit = () => {
                 onChange={handleChange}
                 style={styles.input}
               />
+              {console.log(employee.departmentId?._id)}
               <select
                 name="department"
-                value={employee.department || ""}
+                value={employee.departmentId?._id}
                 onChange={handleChange}
                 style={styles.input}
               >
                 <option value="">Select Department</option>
                 {departments.map((dept) => (
-                  <option key={dept._id} value={dept.dep_name}>
-                    {dept.dep_name}
+                  <option key={dept._id} value={dept._id}>
+                    {dept.name}
                   </option>
                 ))}
               </select>
@@ -142,7 +161,7 @@ const Edit = () => {
                 type="number"
                 name="salary"
                 placeholder="Salary"
-                value={employee.salary || ""}
+                defaultValue={employee.salaryId?.basicSalary || ""}
                 onChange={handleChange}
                 style={styles.input}
               />

@@ -25,10 +25,14 @@ const Setting = () => {
     if (setting.newPassword !== setting.confirmPassword) {
       setError("Password not matched");
     } else {
+      const updatedSetting = {
+        ...setting,  // Spread the existing fields
+        oldPassword: setting.oldPassword,  // Add the old password
+    };
       try {
         const response = await axios.put(
-          `http://localhost:3000/api/employee-dashboard/change-password`,
-          setting,
+          `http://localhost:3000/api/user/change-password/${user._id}`,
+          updatedSetting,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

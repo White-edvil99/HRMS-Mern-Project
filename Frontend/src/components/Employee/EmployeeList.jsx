@@ -124,7 +124,7 @@ const EmployeeList = () => {
                     </button>
                     <button className="bg-yellow-500 text-white px-3 py-1 rounded"
                      onClick={() =>
-                      navigate(`/admin-dashboard/employee/salary/${employee.salaryId?._id}`)
+                      navigate(`/admin-dashboard/employee/salary/${employee.user?._id}`)
                     }
                     >
                       Salary
