@@ -1,77 +1,82 @@
-
-const EmployeeModel = require("../models/EmployeeModel")
+const EmployeeModel = require("../models/EmployeeModel");
 const Leave = require("../models/Leave");
 const User = require("../models/User");
 
 // Add Leave function
 const addLeave = async (req, res) => {
-    try {
-      const { id } = req.params;  // Employee ID
-      const { leaveType, fromDate, toDate, reason } = req.body;
+  try {
+    const { id } = req.params;  // Employee ID
+    const { leaveType, fromDate, toDate, reason } = req.body;
 
-      console.log("========================>leave api",leaveType, fromDate, toDate, reason)
+    const emp = await User.find({ _id: id });
 
-      const emp = await User.find({
-        _id: id
-      })
-
-      if(!emp) {
-        return res.status(404).json({ message: "Employee not found" });
-      }
-      
-      console.log(emp);
-
-      const newLeave = new Leave({
-        employeeId: id,
-        leaveType,
-        fromDate,
-        toDate,
-        reason,
-      });
-  
-      await newLeave.save();
-      
-  
-      return res.status(200).json({ success: true, message: "Leave request added" });
-    } catch (error) {
-      console.error("Error adding leave:", error.message);
-      res.status(500).json({ success: false, error: "Server error in adding leave" });
+    if (!emp) {
+      return res.status(404).json({ message: "Employee not found" });
     }
-  };
-  
 
-  const getLeaves = async (req,res)=>{
-    try {
-        const {id} = req.params;
-        const userRole = req.user.role;
+    const newLeave = new Leave({
+      employeeId: id,
+      leaveType,
+      fromDate,
+      toDate,
+      reason,
+    });
 
-        let leaves;
-        if(userRole === "admin"){
-            leaves = await Leave.find().populate('employeeId', 'name email');
-        } else if(userRole === 'manager'){
-            leaves = await Leave.find({managerId: id}).populate('employeeId', 'name email')
-        } else {
-            leaves = await Leave.find({
-                employeeId: id
-            });
-        }
-        res.status(200).json({success: true, leaves});
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({success: false, message: 'Error fatching leaves'})
-    }
+    await newLeave.save();
+    return res.status(200).json({ success: true, message: "Leave request added" });
+  } catch (error) {
+    console.error("Error adding leave:", error.message);
+    res.status(500).json({ success: false, error: "Server error in adding leave" });
   }
+};
 
-// const getLeaves = async (req, res)=>{
-//     try {
-//         const  {id} = req.params;
-//         console.log("============leave id",id)
-//         const employee = await Leave.find({employeeId: id})
-//         return res.status(200).json({success:true, employee})
-//     } catch (error) {
-//         console.log(error.message)
-//         return res.status(500).json({success:false, error:"leave add server error"})
-//     }
-// }
+// Get Leaves function
+const getLeaves = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userRole = req.user.role;
 
-module.exports = {addLeave, getLeaves};
+    let leaves;
+    if (userRole === "admin") {
+      leaves = await Leave.find().populate('employeeId', 'name email');
+    } else if (userRole === 'manager') {
+      leaves = await Leave.find({ managerId: id }).populate('employeeId', 'name email');
+    } else {
+      leaves = await Leave.find({ employeeId: id }).populate('employeeId', 'name email');
+    }
+
+    res.status(200).json({ success: true, leaves });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error fetching leaves' });
+  }
+};
+
+// Approve or Reject Leave function
+const updateLeaveStatus = async (req, res) => {
+  try {
+    const { leaveId } = req.params;
+    const { status } = req.body;
+
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ success: false, message: "Invalid status" });
+    }
+
+    const leave = await Leave.findById(leaveId);
+
+    if (!leave) {
+      return res.status(404).json({ success: false, message: "Leave not found" });
+    }
+
+    leave.status = status;
+    leave.updateAt = Date.now();
+
+    await leave.save();
+    res.status(200).json({ success: true, message: `Leave ${status}` });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error updating leave status' });
+  }
+};
+
+module.exports = { addLeave, getLeaves, updateLeaveStatus };

@@ -48,6 +48,37 @@ const addSalary = async (req, res) => {
 };
 
 
+const getTotalSalary = async (req, res) => {
+  try {
+    const userId = req.params.userId || req.body.userId;
+
+    if (userId === "total") {
+      // Aggregate total salary
+      const totalSalary = await Salary.aggregate([
+        { $group: { _id: null, total: { $sum: "$amount" } } }
+      ]);
+      return res.status(200).json(totalSalary);
+    }
+
+    // Validate ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ error: "Invalid user ID format" });
+    }
+
+    // Fetch salary for a specific user
+    const salary = await Salary.findOne({ user: userId });
+    if (!salary) {
+      return res.status(404).json({ error: "Salary not found" });
+    }
+
+    return res.status(200).json(salary);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+
 const getSalary = async (req, res) => {
   try {
     const { id } = req.params;
@@ -94,4 +125,5 @@ const getSalary = async (req, res) => {
 module.exports = {
   addSalary,
   getSalary,
+  getTotalSalary
 };

@@ -8,7 +8,7 @@ const AdminSummary = () => {
   const [departmentCount, setDepartmentCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
   const [salaryCount, setSalaryCount] = useState(0);
-
+  const [statusCounts, setStatusCounts] = useState({});
   // Fetch department count
   useEffect(() => {
     const fetchDepartmentCount = async () => {
@@ -49,21 +49,43 @@ const AdminSummary = () => {
 
   useEffect(() => {
     const fetchSalaryCount = async () => {
+      console.log("inside salarycocunt")
       try {
-        const response = await axios.get("http://localhost:3000/api/salary", {
+        const response = await axios.get("http://localhost:3000/api/salary/total", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-
+        console.log(response)
         // Assume that response.data.data holds the department list
-        setSalaryCount(response.data.data.length);
+        setSalaryCount(response.data.salary || 0);
       } catch (error) {
         console.error("Error fetching department count data", error);
       }
     };
     fetchSalaryCount();
   }, []); 
+
+  useEffect(() => {
+    const fetchLeaveStatus = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/leaves/status-count');
+            const data = response.data;
+
+            // Convert array to an object for easy access
+            const counts = data.reduce((acc, item) => {
+                acc[item._id] = item.count;
+                return acc;
+            }, {});
+            setStatusCounts(counts);
+        } catch (error) {
+            console.error("Error fetching leave status:", error);
+        }
+    };
+
+    fetchLeaveStatus();
+}, []);
+  
 
   return (
     <div className="space-y-8 p-6">
@@ -86,7 +108,7 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<FaMoneyBillWave className="text-yellow-500 text-3xl" />}
             text="Monthly Pay"
-            number={salaryCount}
+            number={`₹${salaryCount.toLocaleString()}`}
           />
         </div>
       </div>
@@ -100,22 +122,22 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<FaCheck className="text-blue-500 text-3xl" />}
             text="Leave Applied"
-            number={10}
+            number={0}
           />
           <SummaryCard
             icon={<MdOutlineApproval className="text-green-500 text-3xl" />}
             text="Leave Approved"
-            number={3}
+            number={statusCounts.approved}
           />
           <SummaryCard
             icon={<FaTimes className="text-red-500 text-3xl" />}
             text="Leave Rejected"
-            number={3}
+            number={statusCounts.rejected || 0}
           />
           <SummaryCard
             icon={<FaHourglassHalf className="text-orange-500 text-3xl" />}
             text="Leave Pending"
-            number={4}
+            number={statusCounts.applied || 0}
           />
         </div>
       </div>
