@@ -68,15 +68,15 @@ const Edit = () => {
       formDataObj.append("image", image);
     }
 
-
     
     try {
       const response = await axios.put(`http://localhost:3000/api/employees/${id}`, formDataObj, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          // "Content-Type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
         },
       });
+      console.log("=====>",response)
       if (response.data.success) {
         navigate("/admin-dashboard/employee");
       }
@@ -115,7 +115,7 @@ const Edit = () => {
               <input
                 type="date"
                 name="dateOfBirth"
-                value={employee.dateOfBirth || ""}
+                defaultValue={employee.dateOfBirth || ""}
                 onChange={handleChange}
                 style={styles.input}
               />
@@ -123,7 +123,7 @@ const Edit = () => {
             <div style={styles.row}>
               <select
                 name="maritalStatus"
-                value={employee.maritalStatus || ""}
+                defaultValue={employee.maritalStatus || ""}
                 onChange={handleChange}
                 style={styles.input}
               >
@@ -137,7 +137,7 @@ const Edit = () => {
                 type="text"
                 name="designation"
                 placeholder="Designation"
-                value={employee.designation || ""}
+                defaultValue={employee.designation || ""}
                 onChange={handleChange}
                 style={styles.input}
               />

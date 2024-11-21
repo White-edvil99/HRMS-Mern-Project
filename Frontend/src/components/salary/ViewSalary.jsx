@@ -78,16 +78,17 @@ console.log(salaryData)
           <tbody>
             {salaryData.map((salary, index) => (
               <tr key={salary._id} className="border-b border-gray-200">
+                {console.log(salary)}
                 <td className="py-2 px-4 text-sm text-gray-700">{index + 1}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary._id}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.name}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId?.salaryId?.basicSalary
                 }</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.allowance}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.deductions}</td>
-                <td className="py-2 px-4 text-sm text-gray-700">{salary.netSalary}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId?.salaryId?.allowance}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId?.salaryId?.deductions}</td>
+                <td className="py-2 px-4 text-sm text-gray-700">{salary.employeeId?.salaryId?.netSalary}</td>
                 <td className="py-2 px-4 text-sm text-gray-700">
-                  {new Date(salary.payDate).toLocaleDateString()}
+                  {new Date(salary.employeeId?.salaryId?.payDate).toLocaleDateString()}
                 </td>
               </tr>
               // check the response on chrome to convert allowance , dedutions netSalary 
