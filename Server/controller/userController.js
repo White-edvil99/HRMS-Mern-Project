@@ -64,57 +64,75 @@ const addUser = async (req, res) => {
 // }
 
 const changePasswordById = async (req, res) => {
-  try {
-    const { userId } = req.params; // Get userId from URL params
-    const { currentPassword, newPassword } = req.body; // Get current and new password from the request body
-    console.log("useriD",userId)
-    // Validate inputs
-    if (!currentPassword || !newPassword) {
-      return res.status(400).json({
-        success: false,
-        error: "Current password and new password are required.",
-      });
-    }
+  // try {
+  //   const { userId } = req.params; // Get userId from URL params
+  //   const { currentPassword, newPassword } = req.body; // Get current and new password from the request body
+  //   console.log("useriD",userId)
+  //   // Validate inputs
+  //   if (!currentPassword || !newPassword) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       error: "Current password and new password are required.",
+  //     });
+  //   }
 
-    // Find the user by their ID
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: "User not found.",
-      });
-    }
+  //   // Find the user by their ID
+  //   const user = await User.findById(userId);
+  //   if (!user) {
+  //     return res.status(404).json({
+  //       success: false,
+  //       error: "User not found.",
+  //     });
+  //   }
 
-    // Compare current password with the one stored in the database
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        error: "Current password is incorrect.",
-      });
-    }
+  //   // Compare current password with the one stored in the database
+  //   const isMatch = await bcrypt.compare(currentPassword, user.password);
+  //   if (!isMatch) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       error: "Current password is incorrect.",
+  //     });
+  //   }
 
-    // Hash the new password
-    const hashNewPassword = await bcrypt.hash(newPassword, 10);
+  //   // Hash the new password
+  //   const hashNewPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update the password in the database
-    user.password = hashNewPassword;
-    await user.save();
-    console.log(userId);
+  //   // Update the password in the database
+  //   user.password = hashNewPassword;
+  //   await user.save();
+  //   console.log(userId);
 
-    // Return success response
-    return res.status(200).json({
-      success: true,
-      message: "Password changed successfully.",
-    });
+  //   // Return success response
+  //   return res.status(200).json({
+  //     success: true,
+  //     message: "Password changed successfully.",
+  //   });
     
-  } catch (error) {
-    console.error("Error changing password:", error.message);
-    return res.status(500).json({
-      success: false,
-      error: "Server error while changing the password.",
-    });
-  }
+  // } catch (error) {
+  //   console.error("Error changing password:", error.message);
+  //   return res.status(500).json({
+  //     success: false,
+  //     error: "Server error while changing the password.",
+  //   });
+  // }
+  try {
+    const { userId, oldPassword, newPassword } = req.body;
+    console.log("setting response",userId,oldPassword)
+    const user = await User.findById({ _id: userId })
+    if (!user) {
+        return res.status(404).json({ success: false, error: "user not found" })
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password)
+    if (!isMatch) {
+        return res.status(404).json({ success: false, error: "wrong password" })
+    }
+    const hashPassword = await bcrypt.hash(newPassword, 10)
+    const newUser = await User.findByIdAndUpdate({ _id: userId }, { password: hashPassword })
+    newUser.save();
+    return res.status(200).json({ success: true })
+} catch (error) {
+    res.status(500).json({ success: false, error: "setting error" })
+}
 };
 
 const getUserByRole = async (req, res) => {

@@ -25,14 +25,14 @@ const Setting = () => {
     if (setting.newPassword !== setting.confirmPassword) {
       setError("Password not matched");
     } else {
-      const updatedSetting = {
-        ...setting,  // Spread the existing fields
-        oldPassword: setting.oldPassword,  // Add the old password
-    };
+    //   const updatedSetting = {
+    //     ...setting,  // Spread the existing fields
+    //     oldPassword: setting.oldPassword,  // Add the old password
+    // };
       try {
         const response = await axios.put(
           `http://localhost:3000/api/user/change-password/${user._id}`,
-          updatedSetting,
+          setting,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -56,7 +56,7 @@ const Setting = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 relative">
+    <div  className="flex items-center justify-center min-h-screen bg-gray-100 relative">
       <div className="absolute inset-0 flex items-center justify-center">
         <h2 className="text-9xl text-blue-900 font-bold opacity-10">
           Change Password

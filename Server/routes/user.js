@@ -5,7 +5,7 @@ const userRouter = express.Router();
 
 userRouter.post("/", addUser);
 userRouter.get("/role/:role", getUserByRole);
-userRouter.put("/change-password/:userId", changePasswordById);
+userRouter.put("/change-password/:id", changePasswordById);
 
 
 module.exports = userRouter;

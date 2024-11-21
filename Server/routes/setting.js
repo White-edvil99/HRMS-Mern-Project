@@ -4,9 +4,6 @@ const { changePassword } = require("../controller/settingController"); // Correc
 
 const router = express.Router();
 
-router.put('/change-password', verifyUser,(req,res,next)=>{
-    console.log("setting route hit");
-    next();
-} ,changePassword);
+router.put('/change-password', verifyUser, changePassword);
 
 module.exports = router;
