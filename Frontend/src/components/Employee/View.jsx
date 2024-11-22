@@ -11,7 +11,7 @@ const EmployeeDetails = () => {
     const fetchEmployeeDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/employees/profile/${id}`,
+          `http://localhost:3000/api/employees/view/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
