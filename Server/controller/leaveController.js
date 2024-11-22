@@ -20,7 +20,7 @@ const addLeave = async (req, res) => {
       fromDate,
       toDate,
       reason,
-    });
+    }); 
 
     await newLeave.save();
     return res.status(200).json({ success: true, message: "Leave request added" });

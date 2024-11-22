@@ -14,12 +14,5 @@ export const EmployeeDashboard = () => {
             </div>
         </div>
     </>
-    // <div className="flex ">
-    //         <Sidebar />
-    //         <div className="flex-1 bg-gray-100 h-screen w-full">
-    //             <Navbar />
-    //             <Outlet />
-    //         </div>
-    //     </div>
   )
 }
