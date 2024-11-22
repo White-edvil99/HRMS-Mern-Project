@@ -22,9 +22,9 @@ const getSummary = async ()=>{
         ])
         const leaveSummary = {
             appliedFor:employeeAppliedForLeave.length,
-            approved:leaveStatus.find(item => item.status === "Approved")?.count || 0,
-            rejected:leaveStatus.find(item => item.status === "Rejected")?.count || 0,
-            pending:leaveStatus.find(item => item.status === "Pending")?.count || 0,
+            approved:leaveStatus.find(item => item._id === "approved")?.count || 0,
+            rejected:leaveStatus.find(item => item._id === "rejected")?.count || 0,
+            pending:leaveStatus.find(item => item._id === "pending")?.count || 0,
         }
         return res.status(200).json({
             totalEmployees,

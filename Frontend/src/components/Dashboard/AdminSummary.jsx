@@ -3,12 +3,19 @@ import SummaryCard from "./SummaryCard";
 import { FaUsers, FaBuilding, FaMoneyBillWave, FaCheck, FaTimes, FaHourglassHalf } from "react-icons/fa";
 import { MdOutlineApproval } from "react-icons/md";
 import axios from "axios";
+import { useAuth } from "../../context/AuthContext";
 
 const AdminSummary = () => {
+  const {user} = useAuth()
   const [departmentCount, setDepartmentCount] = useState(0);
   const [employeeCount, setEmployeeCount] = useState(0);
   const [salaryCount, setSalaryCount] = useState(0);
   const [statusCounts, setStatusCounts] = useState({});
+  const [summary, setSummary] = useState({
+    approved: 0,
+    pending: 0,
+    declined: 0,
+  });
   // Fetch department count
   useEffect(() => {
     const fetchDepartmentCount = async () => {
@@ -66,25 +73,79 @@ const AdminSummary = () => {
     fetchSalaryCount();
   }, []); 
 
-  useEffect(() => {
-    const fetchLeaveStatus = async () => {
-        try {
-            const response = await axios.get('http://localhost:3000/leaves/status-count');
-            const data = response.data;
 
-            // Convert array to an object for easy access
-            const counts = data.reduce((acc, item) => {
-                acc[item._id] = item.count;
-                return acc;
-            }, {});
-            setStatusCounts(counts);
-        } catch (error) {
-            console.error("Error fetching leave status:", error);
+  const fetchLeaves = async () => {
+    if (!user?._id) return;
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/api/leave/${user._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-    };
+      );
+      if (response.data.leaves) {
+        setLeaves(response.data.leaves);
+        setFilteredLeaves(response.data.leaves); // Initialize filtered leaves
+        calculateSummary(response.data.leaves);
+      }
+    } catch (error) {
+      console.error(
+        error.response?.data?.message || error.message || "An error occurred"
+      );
+    }
+  };
 
-    fetchLeaveStatus();
-}, []);
+  // const handleStatusChange = async (leaveId, status) => {
+  //   try {
+  //     await axios.patch(
+  //       `http://localhost:3000/api/leave/status/${leaveId}`,
+  //       { status },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //         },
+  //       }
+  //     );
+  //     fetchLeaves(); // Re-fetch leaves to reflect changes
+  //   } catch (error) {
+  //     console.error("Error updating leave status", error);
+  //   }
+  // };
+
+  const calculateSummary = (leaves) => {
+    const summaryData = {
+      approved: leaves.filter((leave) => leave.status === "approved").length,
+      pending: leaves.filter((leave) => leave.status === "pending").length,
+      declined: leaves.filter((leave) => leave.status === "rejected").length,
+    };
+    setSummary(summaryData);
+  };
+
+  useEffect(() => {
+    fetchLeaves();
+  }, [user?._id]);
+
+//   useEffect(() => {
+//     const fetchLeaveStatus = async () => {
+//         try {
+//             const response = await axios.get('http://localhost:3000/leaves/status-count');
+//             const data = response.data;
+
+//             // Convert array to an object for easy access
+//             const counts = data.reduce((acc, item) => {
+//                 acc[item._id] = item.count;
+//                 return acc;
+//             }, {});
+//             setStatusCounts(counts);
+//         } catch (error) {
+//             console.error("Error fetching leave status:", error);
+//         }
+//     };
+
+//     fetchLeaveStatus();
+// }, []);
   
 
   return (
@@ -127,17 +188,17 @@ const AdminSummary = () => {
           <SummaryCard
             icon={<MdOutlineApproval className="text-green-500 text-3xl" />}
             text="Leave Approved"
-            number={statusCounts.approved}
+            number={summary.approved}
           />
           <SummaryCard
             icon={<FaTimes className="text-red-500 text-3xl" />}
             text="Leave Rejected"
-            number={statusCounts.rejected || 0}
+            number={summary.rejected || 0}
           />
           <SummaryCard
             icon={<FaHourglassHalf className="text-orange-500 text-3xl" />}
             text="Leave Pending"
-            number={statusCounts.applied || 0}
+            number={summary.pending || 0}
           />
         </div>
       </div>

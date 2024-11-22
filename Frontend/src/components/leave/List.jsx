@@ -87,7 +87,7 @@ const List = () => {
       <h3 className="text-2xl font-bold text-gray-700 mb-4">Leave Requests</h3>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-6">
         <div className="flex items-center justify-between bg-white p-4 rounded-lg shadow">
           <div>
             <h4 className="text-lg font-semibold text-gray-600">Approved</h4>
@@ -112,7 +112,7 @@ const List = () => {
       </div>
 
       {/* Filter and Add Section */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <div className="flex gap-4">
           <select
             className="border px-4 py-2 rounded"
@@ -138,62 +138,67 @@ const List = () => {
       </div>
 
       {/* Leave Table */}
-      <table className="w-full text-sm text-gray-600 bg-white shadow rounded-lg overflow-hidden">
-        <thead className="bg-gray-100 text-gray-700 justify-center">
-          <tr>
-            <th className="px-4 py-3">S.No</th>
-            <th className="px-4 py-3">Employee Name</th>
-            <th className="px-4 py-3">Leave Type</th>
-            <th className="px-4 py-3">From</th>
-            <th className="px-4 py-3">To</th>
-            <th className="px-4 py-3">Status</th>
-            {user?.role === "admin" && <th className="px-4 py-3">Actions</th>}
-          </tr>
-        </thead>
-        <tbody className="text-center">
-          {filteredLeaves.map((leave, index) => (
-            <tr key={leave._id} className="border-b">
-              <td className="px-4 py-3">{index + 1}</td>
-              <td className="px-4 py-3">{leave.employeeId?.name || "N/A"}</td>
-              <td className="px-4 py-3">{leave.leaveType}</td>
-              <td className="px-4 py-3">{new Date(leave.fromDate).toLocaleDateString()}</td>
-              <td className="px-4 py-3">{new Date(leave.toDate).toLocaleDateString()}</td>
-              <td
-                className={`px-4 py-3 font-bold ${
-                  leave.status === "approved"
-                    ? "text-green-600"
-                    : leave.status === "rejected"
-                    ? "text-red-600"
-                    : "text-yellow-600"
-                }`}
-              >
-                {leave.status.toUpperCase()}
-              </td>
-              {user?.role === "admin" && (
-                <td className="px-4 py-3 flex justify-center space-x-2">
-                  <button
-                    onClick={() => handleStatusChange(leave._id, "approved")}
-                    className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
-                  >
-                    Approve
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange(leave._id, "rejected")}
-                    className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Reject
-                  </button>
-                </td>
-              )}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-gray-600 bg-white shadow rounded-lg">
+          <thead className="bg-gray-100 text-gray-700">
+            <tr>
+              <th className="px-4 py-3">S.No</th>
+              <th className="px-4 py-3">Employee Name</th>
+              <th className="px-4 py-3">Leave Type</th>
+              <th className="px-4 py-3">From</th>
+              <th className="px-4 py-3">To</th>
+              <th className="px-4 py-3">Reason</th>
+              <th className="px-4 py-3">Status</th>
+              {user?.role === "admin" && <th className="px-4 py-3">Actions</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="text-center">
+            {filteredLeaves.filter(leave => leave.employeeId?.name).map((leave, index) => (
+              <tr key={leave._id} className="border-b">
+                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3">{leave.employeeId?.name || "N/A"}</td>
+                <td className="px-4 py-3">{leave.leaveType}</td>
+                <td className="px-4 py-3">{new Date(leave.fromDate).toLocaleDateString()}</td>
+                <td className="px-4 py-3">{new Date(leave.toDate).toLocaleDateString()}</td>
+                <td className="px-4 py-3">{leave.reason}</td>
+                <td
+                  className={`px-4 py-3 font-bold ${
+                    leave.status === "approved"
+                      ? "text-green-600"
+                      : leave.status === "rejected"
+                      ? "text-red-600"
+                      : "text-yellow-600"
+                  }`}
+                >
+                  {leave.status.toUpperCase()}
+                </td>
+                {user?.role === "admin" && (
+                  <td className="px-4 py-3 flex justify-center space-x-2">
+                    <button
+                      onClick={() => handleStatusChange(leave._id, "approved")}
+                      className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange(leave._id, "rejected")}
+                      className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                    >
+                      Reject
+                    </button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
 export default List;
+
 
 
 
