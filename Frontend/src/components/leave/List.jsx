@@ -138,8 +138,8 @@ const List = () => {
       </div>
 
       {/* Leave Table */}
-      <table className="w-full text-sm text-center text-gray-600 bg-white shadow rounded-lg overflow-hidden">
-        <thead className="bg-gray-100 text-gray-700">
+      <table className="w-full text-sm text-gray-600 bg-white shadow rounded-lg overflow-hidden">
+        <thead className="bg-gray-100 text-gray-700 justify-center">
           <tr>
             <th className="px-4 py-3">S.No</th>
             <th className="px-4 py-3">Employee Name</th>

@@ -9,7 +9,7 @@ export const EmployeeDashboard = () => {
      <Navbar />
         <div className="flex pt-16">
         <Sidebar />
-            <div className="flex-1 bg-gray-100 h-screen w-full ml-72 ">     
+            <div className="flex-1 bg-gray-100 h-full w-full ml-72 ">     
             <Outlet />
             </div>
         </div>
