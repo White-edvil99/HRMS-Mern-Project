@@ -206,19 +206,40 @@ const editEmployee = async (req, res) => {
     const { id } = req.params;
     const { name, maritalStatus, designation, department, salary } = req.body;
 
-    const employee = await Employee.findById({ _id: id });
+    console.log("===============inside edit",name,maritalStatus,designation,department,salary)
+
+    const employee = await Employee.findById({ _id: id }).populate([
+      "departmentId",
+      "salaryId"
+    ]);
+
     if (!employee) {
       return res
         .status(404)
         .json({ success: false, error: "employee not found" });
     }
 
-    const user = await User.findById({ _id: employee.user});
+    const user = await User.findById({ _id: employee.user}).populate();
 
     if (!user) {
       return res.status(404).json({ success: false, error: "user not found" });
     }
-    const updateUser = await user.findByIdAndUpdate({ _id: employee });
+    user.name = name
+      // Update employee fields
+      if (salary) {
+        employee.salaryId.basicSalary = salary; // Update salary
+        await employee.salaryId.save(); // Save updated salary
+      }
+
+
+  
+      if (department) {
+        employee.departmentId = department; // Update department name
+      }
+
+      await employee.save();
+      await user.save()
+
     const updateEmployee = await Employee.findByIdAndUpdate(
       { _id: id },
       {
@@ -229,7 +250,9 @@ const editEmployee = async (req, res) => {
         salary,
       }
     )
-    if(!updateEmployee || !updateUser){
+    await user.save()
+
+    if(!updateEmployee){
       return res
         .status(404)
         .json({ success: false, error: "document not found" });
@@ -265,7 +288,8 @@ const fetchEmployeesByIdDepId = async (req, res) => {
 // Fetch a specific employee by ID
 const fetchEmployeeById = async (req, res) => {
   try {
-    const employee = await Employee.findById(req.params.id);
+    const userId = req.params.id
+    const employee = await User.findById(userId);
     if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }

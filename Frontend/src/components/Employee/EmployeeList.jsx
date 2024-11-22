@@ -109,7 +109,7 @@ const EmployeeList = () => {
                     <button
                       className="bg-blue-500 text-white px-3 py-1 rounded"
                       onClick={() =>
-                        navigate(`/admin-dashboard/employee/view/${employee._id}`)
+                        navigate(`/admin-dashboard/employee/view/${employee.user?._id}`)
                       }
                     >
                       View
