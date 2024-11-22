@@ -57,17 +57,17 @@ const Setting = () => {
 
   return (
 
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-r from-gray-800 via-gray-900 to-black">
-  <h2 className="text-4xl md:text-6xl text-gray-300 font-extrabold mb-6">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+  <h2 className="text-4xl md:text-6xl text-gray-400 font-extrabold mb-6">
     Change Password
   </h2>
-  <div className="w-full max-w-md bg-gray-800 shadow-lg rounded-lg p-6 md:p-8">
-    <p className="text-red-400 text-center mb-4">{error}</p>
+  <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-6 md:p-8">
+    <p className="text-red-500 text-center mb-4">{error}</p>
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label
           htmlFor="oldPassword"
-          className="block text-sm font-medium text-gray-300 mb-1"
+          className="block text-sm font-medium text-gray-700 mb-1"
         >
           Old Password
         </label>
@@ -77,14 +77,14 @@ const Setting = () => {
           name="oldPassword"
           placeholder="Enter old password"
           onChange={handleChange}
-          className="block w-full p-3 border border-gray-700 rounded-lg bg-gray-900 text-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="block w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
       </div>
       <div>
         <label
           htmlFor="newPassword"
-          className="block text-sm font-medium text-gray-300 mb-1"
+          className="block text-sm font-medium text-gray-700 mb-1"
         >
           New Password
         </label>
@@ -94,14 +94,14 @@ const Setting = () => {
           name="newPassword"
           placeholder="Enter new password"
           onChange={handleChange}
-          className="block w-full p-3 border border-gray-700 rounded-lg bg-gray-900 text-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="block w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
       </div>
       <div>
         <label
           htmlFor="confirmPassword"
-          className="block text-sm font-medium text-gray-300 mb-1"
+          className="block text-sm font-medium text-gray-700 mb-1"
         >
           Confirm Password
         </label>
@@ -111,13 +111,13 @@ const Setting = () => {
           name="confirmPassword"
           placeholder="Confirm new password"
           onChange={handleChange}
-          className="block w-full p-3 border border-gray-700 rounded-lg bg-gray-900 text-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="block w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
           required
         />
       </div>
       <button
         type="submit"
-        className="w-full py-3 bg-blue-600 text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500"
+        className="w-full py-3 bg-blue-500 text-white text-lg font-semibold rounded-lg shadow-lg hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300"
       >
         Change Password
       </button>
