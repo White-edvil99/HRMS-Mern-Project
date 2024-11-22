@@ -1,11 +1,15 @@
 const express = require("express");
 const verifyUser = require("../middleware/authMiddleware");
-const { addLeave,getLeaves, updateLeaveStatus } = require("../controller/leaveController");
+const { addLeave,getLeaves,getName ,updateLeaveStatus } = require("../controller/leaveController");
 const Leave = require("../models/Leave");
 const departmentRouter = express.Router();
 const router = express.Router()
 
 router.post('/add/:id', verifyUser, addLeave);
+router.get('leaves/:id',(req,res,next)=>{
+    console.log("fecthing leave for ids", req.params.id);
+    next();
+}, verifyUser,getName); //get /leave by empid
 router.get('/:id', verifyUser,getLeaves);
 router.patch('/status/:leaveId', verifyUser, updateLeaveStatus);
 router.get('/leaves/status-count', async (req, res) => {

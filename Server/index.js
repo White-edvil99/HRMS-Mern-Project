@@ -28,6 +28,7 @@ app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/salary", salaryRouter);
 app.use('/api/leave', leaveRouter);
+// app.use('/api/employee', leaveRouter);
 app.use("/api/setting/", settingRouter);
 app.use("/api/dashboard/", dashboardRouter);
 app.use("/api/user", userRouter);

@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
@@ -9,6 +9,8 @@ import { BsClockHistory, BsPersonCheck, BsXCircle } from "react-icons/bs";
 const List = () => {
   const { user } = useAuth();
   const [leaves, setLeaves] = useState([]);
+  const [filteredLeaves, setFilteredLeaves] = useState([]);
+  const [selectedType, setSelectedType] = useState(""); // State for selected leave type
   const [summary, setSummary] = useState({
     approved: 0,
     pending: 0,
@@ -28,12 +30,30 @@ const List = () => {
       );
       if (response.data.leaves) {
         setLeaves(response.data.leaves);
+        setFilteredLeaves(response.data.leaves); // Initialize filtered leaves
         calculateSummary(response.data.leaves);
       }
     } catch (error) {
       console.error(
         error.response?.data?.message || error.message || "An error occurred"
       );
+    }
+  };
+
+  const handleStatusChange = async (leaveId, status) => {
+    try {
+      await axios.patch(
+        `http://localhost:3000/api/leave/status/${leaveId}`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      fetchLeaves(); // Re-fetch leaves to reflect changes
+    } catch (error) {
+      console.error("Error updating leave status", error);
     }
   };
 
@@ -49,6 +69,17 @@ const List = () => {
   useEffect(() => {
     fetchLeaves();
   }, [user?._id]);
+
+  // Filter Leaves Based on Selected Type
+  useEffect(() => {
+    if (selectedType) {
+      setFilteredLeaves(
+        leaves.filter((leave) => leave.leaveType.toLowerCase() === selectedType)
+      );
+    } else {
+      setFilteredLeaves(leaves);
+    }
+  }, [selectedType, leaves]);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -83,10 +114,15 @@ const List = () => {
       {/* Filter and Add Section */}
       <div className="flex justify-between items-center mb-6">
         <div className="flex gap-4">
-          <select className="border px-4 py-2 rounded">
+          <select
+            className="border px-4 py-2 rounded"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value.toLowerCase())}
+          >
             <option value="">All Types</option>
-            <option value="annual">Annual Leave</option>
-            <option value="unpaid">Unpaid Leave</option>
+            <option value="casual">Casual Leave</option>
+            <option value="sick">Sick Leave</option>
+            <option value="privilege">Privilege Leave</option>
           </select>
           <select className="border px-4 py-2 rounded">
             <option value="">2024</option>
@@ -102,7 +138,7 @@ const List = () => {
       </div>
 
       {/* Leave Table */}
-      <table className="w-full text-sm text-gray-600 bg-white shadow rounded-lg overflow-hidden">
+      <table className="w-full text-sm text-center text-gray-600 bg-white shadow rounded-lg overflow-hidden">
         <thead className="bg-gray-100 text-gray-700">
           <tr>
             <th className="px-4 py-3">S.No</th>
@@ -114,19 +150,27 @@ const List = () => {
             {user?.role === "admin" && <th className="px-4 py-3">Actions</th>}
           </tr>
         </thead>
-        <tbody>
-          {leaves.map((leave, index) => (
+        <tbody className="text-center">
+          {filteredLeaves.map((leave, index) => (
             <tr key={leave._id} className="border-b">
               <td className="px-4 py-3">{index + 1}</td>
               <td className="px-4 py-3">{leave.employeeId?.name || "N/A"}</td>
               <td className="px-4 py-3">{leave.leaveType}</td>
               <td className="px-4 py-3">{new Date(leave.fromDate).toLocaleDateString()}</td>
               <td className="px-4 py-3">{new Date(leave.toDate).toLocaleDateString()}</td>
-              <td className={`px-4 py-3 font-bold ${leave.status === "approved" ? "text-green-600" : leave.status === "rejected" ? "text-red-600" : "text-yellow-600"}`}>
+              <td
+                className={`px-4 py-3 font-bold ${
+                  leave.status === "approved"
+                    ? "text-green-600"
+                    : leave.status === "rejected"
+                    ? "text-red-600"
+                    : "text-yellow-600"
+                }`}
+              >
                 {leave.status.toUpperCase()}
               </td>
               {user?.role === "admin" && (
-                <td className="px-4 py-3 flex space-x-2">
+                <td className="px-4 py-3 flex justify-center space-x-2">
                   <button
                     onClick={() => handleStatusChange(leave._id, "approved")}
                     className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600"
@@ -150,6 +194,8 @@ const List = () => {
 };
 
 export default List;
+
+
 
 
 

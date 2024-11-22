@@ -29,6 +29,37 @@ const addLeave = async (req, res) => {
     res.status(500).json({ success: false, error: "Server error in adding leave" });
   }
 };
+//get employe levave
+const getName = async (req, res) => {
+  try {
+      const { id } = req.params; // Get the employee (user) ID from the request params
+      console.log("Fetching leaves for user ID:", id); // Debugging log
+
+      // Query the database for leaves associated with this user ID
+      const leaves = await Leave.find({ employeeId: id }).populate('employeeId', 'name email'); // Populate data from User
+
+      if (!leaves || leaves.length === 0) {
+          return res.status(404).json({
+              success: false,
+              message: 'No leaves found for this user',
+          });
+      }
+
+      // Send back the fetched leaves
+      res.status(200).json({
+          success: true,
+          leaves,
+      });
+  } catch (error) {
+      console.error("Error in fetchEmployeeLeaves:", error);
+      res.status(500).json({
+          success: false,
+          message: 'Error fetching leaves',
+      });
+  }
+};
+
+
 
 // Get Leaves function
 const getLeaves = async (req, res) => {
@@ -79,4 +110,4 @@ const updateLeaveStatus = async (req, res) => {
   }
 };
 
-module.exports = { addLeave, getLeaves, updateLeaveStatus };
+module.exports = { addLeave, getLeaves, getName,updateLeaveStatus };
