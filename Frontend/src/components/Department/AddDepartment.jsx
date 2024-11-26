@@ -4,7 +4,7 @@ import axios from "axios"; // Ensure axios is imported
 
 const AddDepartment = () => {
   const [department, setDepartment] = useState({
-    dep_name: "",
+    name: "",
     description: "",
   });
   const Navigate = useNavigate();
@@ -60,14 +60,14 @@ const AddDepartment = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
-              htmlFor="dep_name"
+              htmlFor="name"
               className="block text-gray-600 font-medium mb-1"
             >
               Department Name
             </label>
             <input
-              name="dep_name"
-              value={department.dep_name} // Binding state to input value
+              name="name"
+              value={department.name} // Binding state to input value
               onChange={handleChange}
               type="text"
               placeholder="Enter Dept Name"

@@ -13,6 +13,7 @@ const path = require("path");
 const leaveRouter = require("./routes/leave");
 // const connectToDb = require("./Database/Db");
 const dashboardRouter = require("./routes/dashboard")
+const userRouter = require("./routes/user")
 
 connectToDb(); // Call the function to connect to the database
 
@@ -26,9 +27,11 @@ app.use('/api/auth', authRouter);
 app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/salary", salaryRouter);
-app.use('api/leave', leaveRouter);
+app.use('/api/leave', leaveRouter);
+// app.use('/api/employee', leaveRouter);
 app.use("/api/setting/", settingRouter);
 app.use("/api/dashboard/", dashboardRouter);
+app.use("/api/user", userRouter);
 
 
 const PORT = process.env.PORT || 7000;

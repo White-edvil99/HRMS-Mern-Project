@@ -18,12 +18,13 @@ import Summary from "./components/EmployeeDashboard/Summary";
 import List from "./components/leave/List";
 import AddLeave from "./components/leave/Add";
 import ViewSalary from "./components/salary/ViewSalary";
-
 import Setting from "./components/EmployeeDashboard/Setting";
+import EmployeeLeaveDetails from "./components/Employee/EmployeeLeaveDetails";
 
 function App() {
   const user = useAuth();
   console.log(user)
+  console.log(user._id)
   
   return (
     <AuthProvider>
@@ -57,9 +58,11 @@ function App() {
             <Route path="employee/salary/:id" element={<ViewSalary />} />
             <Route path="salary/add" element={<Add />} />
             <Route path="leaves" element={<List />} />
+            <Route path="settings" element={<Setting />} />
+            <Route path= "employee/leaves/:id" element={<EmployeeLeaveDetails />} />
           </Route>
 
-          {/* Protected Employee Dashboard route */}
+          {/* Protected Employee Dashboard route */}a
           <Route
             path="/employee-dashboard"
             element={
@@ -75,7 +78,7 @@ function App() {
             <Route path="leaves" element={<List />} />
             <Route path="add-leave" element={<AddLeave />} />
             <Route path="/employee-dashboard/salary/:id" element={<ViewSalary />} />
-            <Route path="/employee-dashboard/setting" element={<Setting />} />
+            <Route path="settings" element={<Setting />} />
           </Route>
 
         </Routes>

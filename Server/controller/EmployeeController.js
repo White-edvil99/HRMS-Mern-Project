@@ -3,6 +3,8 @@ const Employee = require("../models/EmployeeModel");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const path = require("path");
+const Salary = require("../models/Salary");
+const DepartmentModel = require("../models/DepartmentModel");
 
 // Storage configuration for multer
 const storage = multer.diskStorage({
@@ -23,26 +25,41 @@ const addEmployee = async (req, res) => {
     const {
       name,
       email,
-      employeeId,
-      dateOfBirth,
-      gender,
-      maritalStatus,
-      designation,
-      department,
-      salary,
       password,
       role,
+      employInfo,
+      salaryInfo,
+      departmentInfo,
+      leaveInfo
     } = req.body;
 
-    const user = await User.findOne({ email });
-    if (user) {
-      return res
-        .status(400)
-        .json({ success: false, error: "User already registered as employee" });
+    const { 
+      dateOfBirth, 
+      gender, 
+      maritalStatus, 
+      designation, 
+    } = employInfo;
+
+    const {departmentId} = departmentInfo
+
+    const {
+      salary      
+    } = salaryInfo
+    
+
+ 
+    console.log("=================INSIDE EMP",departmentId)
+
+    // Check if a user with the given email already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ success: false, error: "User already registered as employee" });
     }
 
+    // Hash the password
     const hashPassword = await bcrypt.hash(password, 10);
 
+    // Create a new User document
     const newUser = new User({
       name,
       email,
@@ -51,37 +68,106 @@ const addEmployee = async (req, res) => {
       profileImage: req.file ? req.file.filename : "",
     });
 
-    const savedUser = await newUser.save();
+ 
+    const newSalary = new Salary({
+      basicSalary: salary,
+      employeeId: newUser._id
+    })
 
+
+    console.log("emp==============",newUser)
+
+    // Create a new Employee document with a reference to the created User
     const newEmployee = new Employee({
-      name: savedUser.name,
-      employeeId,
-      email,
+      user: newUser._id, // Reference to the User document
       dateOfBirth,
       gender,
       maritalStatus,
       designation,
-      department,
-      salary,
-      password: hashPassword,
-      role,
+      role: role.toLowerCase(),
       image: req.file ? req.file.filename : "",
+
+      departmentId,
+      salaryId: newSalary._id ,
+      leaveId: null,
+
     });
 
+    // Save the Employee document
+    await newUser.save();
     await newEmployee.save();
+    await newSalary.save();
+
+
+    // Optionally handle departmentInfo, salaryInfo, and leaveInfo here (if necessary)
+    // For now, they can be null, but if you need them, you can save them as separate documents or associate them with the employee.
+
+    // Update the User's employeeId to reference the created Employee
+    newUser.employeeId = newEmployee._id;
+
+    // Save the updated User document
+    await newUser.save();
+
     return res.status(200).json({ success: true, message: "Employee created" });
   } catch (error) {
     console.error("Error adding employee:", error.message);
-    res
-      .status(500)
-      .json({ success: false, error: "Server error in adding employee" });
+    res.status(500).json({ success: false, error: "Server error in adding employee" });
   }
 };
 
+// const getEmployeeById = async (req, res) =>{
+
+// }
+// Fetch a specific employee by ID
+const getEmployeeById = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the employee ID from the request parameters
+
+    // Find the employee by ID and populate related fields
+    const employee = await Employee.findById(id)
+      .populate("user") // Populate the user reference
+      .populate("salaryId") // Populate the salary reference
+      .populate("departmentId") // Populate the department reference
+      .populate("leaveId"); // Populate the leave reference (if applicable)
+
+    // Check if the employee exists
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: "Employee not found",
+      });
+    }
+
+    // Return the employee details in the response
+    return res.status(200).json({
+      success: true,
+      data: employee,
+      message: "Successfully fetched employee details",
+    });
+  } catch (error) {
+    console.error("Error fetching employee by ID:", error.message);
+
+    // Handle any server errors
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      message: "Server error in fetching employee by ID",
+    });
+  }
+};
+
+
+
 // Get all employees
 const getEmployees = async (req, res) => {
+  console.log("get======")
   try {
-    const employees = await Employee.find();
+    const employees = await Employee.find()
+    .populate('departmentId')
+    .populate('user')
+    .populate('salaryId')
+    .populate('leaveId');
+;
     return res.status(200).json({
       success: true,
       data: employees,
@@ -120,19 +206,40 @@ const editEmployee = async (req, res) => {
     const { id } = req.params;
     const { name, maritalStatus, designation, department, salary } = req.body;
 
-    const employee = await Employee.findById({ _id: id });
+    console.log("===============inside edit",name,maritalStatus,designation,department,salary)
+
+    const employee = await Employee.findById({ _id: id }).populate([
+      "departmentId",
+      "salaryId"
+    ]);
+
     if (!employee) {
       return res
         .status(404)
         .json({ success: false, error: "employee not found" });
     }
 
-    const user = await User.findById({ _id: employee.userId });
+    const user = await User.findById({ _id: employee.user}).populate();
 
     if (!user) {
       return res.status(404).json({ success: false, error: "user not found" });
     }
-    const updateUser = await user.findByIdAndUpdate({ _id: employee });
+    user.name = name
+      // Update employee fields
+      if (salary) {
+        employee.salaryId.basicSalary = salary; // Update salary
+        await employee.salaryId.save(); // Save updated salary
+      }
+
+
+  
+      if (department) {
+        employee.departmentId = department; // Update department name
+      }
+
+      await employee.save();
+      await user.save()
+
     const updateEmployee = await Employee.findByIdAndUpdate(
       { _id: id },
       {
@@ -143,7 +250,9 @@ const editEmployee = async (req, res) => {
         salary,
       }
     )
-    if(!updateEmployee || !updateUser){
+    await user.save()
+
+    if(!updateEmployee){
       return res
         .status(404)
         .json({ success: false, error: "document not found" });
@@ -179,7 +288,8 @@ const fetchEmployeesByIdDepId = async (req, res) => {
 // Fetch a specific employee by ID
 const fetchEmployeeById = async (req, res) => {
   try {
-    const employee = await Employee.findById(req.params.id);
+    const userId = req.params.id
+    const employee = await User.findById(userId);
     if (!employee) {
       return res.status(404).json({ error: "Employee not found" });
     }
@@ -216,4 +326,5 @@ module.exports = {
   editEmployee,
   deleteEmployee,
   fetchEmployeesByIdDepId,
+  getEmployeeById
 };

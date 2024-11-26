@@ -3,9 +3,9 @@ const Department = require("../models/DepartmentModel");
 
 const addDepartment = async (req, res) => {
     try {
-        const { dep_name, description } = req.body;
+        const { name, description } = req.body;
         const newDep = new Department({
-            dep_name,
+            name,
             description
         });
 

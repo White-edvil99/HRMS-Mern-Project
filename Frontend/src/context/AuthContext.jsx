@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 const UserContext = createContext();
 
-const AuthProvider = function ({ children }) {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -27,36 +27,43 @@ const AuthProvider = function ({ children }) {
             setUser(null);
           }
         } catch (error) {
-          console.log(error);
-          if (error.response && !error.response.data.error) {
-            setUser(null);
-          }
+          console.error("Error verifying user:", error);
+          setUser(null);
         } finally {
           setLoading(false);
+        }
+      } else {
+        setLoading(false); // Handle case where no token is present
+      }
+    };
+
+    const refreshToken = async () => {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (refreshToken) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/api/auth/refresh-token",
+            { token: refreshToken }
+          );
+          if (response.data.success) {
+            localStorage.setItem("token", response.data.token);
+          } else {
+            console.warn("Refresh token failed");
+          }
+        } catch (error) {
+          console.error("Error refreshing token:", error);
         }
       }
     };
 
+    // Call verifyUser and refreshToken on initial load
     verifyUser();
+    refreshToken();
 
-    // Call refreshToken periodically
-    const interval = setInterval(refreshToken, 15 * 60 * 1000); // Refresh token every 15 minutes
+    // Set up interval to refresh the token periodically
+    const interval = setInterval(refreshToken, 15 * 60 * 1000); // Every 15 minutes
     return () => clearInterval(interval); // Clear interval on component unmount
   }, []);
-
-  const refreshToken = async () => {
-    const token = localStorage.getItem("refreshToken");
-    if (token) {
-      try {
-        const response = await axios.post("http://localhost:3000/api/auth/refresh-token", { token });
-        if (response.data.success) {
-          localStorage.setItem("token", response.data.token);
-        }
-      } catch (error) {
-        console.log("Error refreshing token:", error);
-      }
-    }
-  };
 
   const login = (user) => {
     setUser(user);
@@ -65,6 +72,7 @@ const AuthProvider = function ({ children }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("token");
+    localStorage.removeItem("refreshToken");
   };
 
   return (
