@@ -1,5 +1,5 @@
 const EmployeeModel = require("../models/EmployeeModel");
-const {Leave} = require("../models/Leave");
+const {Leave,LeaveType} = require("../models/Leave");
 const User = require("../models/User");
 
 // Add Leave function
@@ -108,5 +108,30 @@ const updateLeaveStatus = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error updating leave status' });
   }
 };
+
+// //create leavetype
+// const addNewLeaveType = async (req, res) => {
+//   try {
+//     const {type,mothlyQuota} = req.body;
+
+//     //check if leave type exists
+//     const existingType = await LeaveType.findOne({ type: type.toLowerCase()});
+//     if(existingType) {
+//       return res.status(400).json({message:"leave type added successfully..."});
+//     }
+//   } catch (error) {
+//     res.status(500).json({message: error.message});
+//   }
+// }
+
+// // fetch leavetypes
+// const fetchLeaveType  = async (req,res) => {
+//   try {
+//     const leaveType = await LeaveType.find({});
+//     res.status(200).json({leaveType});
+//   } catch (error) {
+//     res.status(500).json({message:error.message});
+//   }
+// }
 
 module.exports = { addLeave, getLeaves, getName,updateLeaveStatus };

@@ -11,6 +11,7 @@ const settingRouter = require("./routes/setting")
 const { userRegister } = require("./UserSeed");
 const path = require("path");
 const leaveRouter = require("./routes/leave");
+const leaveTypeRouter = require('./routes/leaveType');
 // const connectToDb = require("./Database/Db");
 const dashboardRouter = require("./routes/dashboard")
 const userRouter = require("./routes/user")
@@ -28,6 +29,7 @@ app.use('/api/departments', departmentRouter);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/salary", salaryRouter);
 app.use('/api/leave', leaveRouter);
+app.use('/api/leave-type',leaveTypeRouter);
 // app.use('/api/employee', leaveRouter);
 app.use("/api/setting/", settingRouter);
 app.use("/api/dashboard/", dashboardRouter);

@@ -10,6 +10,9 @@ import { BsClockHistory, BsPersonCheck, BsXCircle } from "react-icons/bs";
 const List = () => {
   const { user } = useAuth();
   const [leaves, setLeaves] = useState([]);
+  const [isOpen,setIsOpen] = useState(false);
+  const [leaveType, setLeaveType] = useState([]);
+  const [monthlyQuota, setMonthlyQuota] = useState([]);
   const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [selectedType, setSelectedType] = useState(""); // State for selected leave type
   const [summary, setSummary] = useState({
@@ -17,6 +20,7 @@ const List = () => {
     pending: 0,
     declined: 0,
   });
+  
 
   const fetchLeaves = async () => {
     if (!user?._id) return;
@@ -82,6 +86,31 @@ const List = () => {
     }
   }, [selectedType, leaves]);
 
+
+  const handleAddLeaveType = async (type, monthlyQuota) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/leave-type/add",
+        {type,monthlyQuota},
+        {
+          headers:{
+            Authorization:`Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("===> resp",response)
+      alert(response.data.message);
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error adding leave type: ", error);
+    }
+  };
+
+  // fetch leave type 
+
+  
+
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -130,6 +159,57 @@ const List = () => {
             <option value="">2023</option>
           </select>
         </div>
+
+
+        <div className="flex items-center justify-center bg-gray-100">
+      {/* Trigger Button */}
+      <button
+        onClick={() => setIsOpen(true)}
+        className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+      >
+        Create Leave Type 
+      </button>
+
+      {/* Popup */}
+
+       
+        {isOpen && (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-6 rounded shadow-lg w-1/3">
+            <h2 className="text-lg font-bold mb-4">Create Leave Type</h2>
+            <input
+                type="text"
+                placeholder="Leave Type"
+                value={leaveType}
+                onChange={(e) => setLeaveType(e.target.value)}
+                className="border p-2 mb-4 w-full"
+            />
+            <input
+                type="number"
+                placeholder="Monthly Quota"
+                value={monthlyQuota}
+                onChange={(e) => setMonthlyQuota(e.target.value)}
+                className="border p-2 mb-4 w-full"
+            />
+            <button
+                onClick={() => handleAddLeaveType(leaveType, monthlyQuota)}
+                className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+            >
+                Add Leave Type
+            </button>
+            <button
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+            >
+                Close
+            </button>
+        </div>
+    </div>
+)}
+
+      </div>
+
+
         {user?.role == 'employee' &&<Link
           to="/employee-dashboard/add-leave"
           className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700"

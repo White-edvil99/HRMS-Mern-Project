@@ -1,6 +1,6 @@
 const express = require("express");
 const verifyUser = require("../middleware/authMiddleware");
-const { LeaveType, Leave } = require("../models/Leave");
+const { Leave } = require("../models/Leave");
 
 const {
   addLeave,
