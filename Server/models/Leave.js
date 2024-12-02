@@ -12,5 +12,15 @@ const leaveSchema = new Schema({
     updateAt:{type:Date, default:Date.now},
 });
 
+
+// const leaveTypeSchema = new Schema({
+//     name: { type: String, required: true, unique: true }, // Example: "Sick Leave", "Casual Leave", etc.
+//     description: { type: String }, // Optional description for the leave type.
+//     monthlyAllocation: { type: Number, required: true, default: 0 }, // Number of leaves allocated per month.
+//     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true }, // Admin who created this leave type.
+//     createdAt: { type: Date, default: Date.now },
+//     updatedAt: { type: Date, default: Date.now },
+// });
+
 const Leave = mongoose.model("Leave", leaveSchema);
-module.exports = Leave
+module.exports = {Leave}

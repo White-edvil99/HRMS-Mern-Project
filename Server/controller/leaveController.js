@@ -1,5 +1,5 @@
 const EmployeeModel = require("../models/EmployeeModel");
-const Leave = require("../models/Leave");
+const {Leave} = require("../models/Leave");
 const User = require("../models/User");
 
 // Add Leave function
@@ -58,7 +58,6 @@ const getName = async (req, res) => {
       });
   }
 };
-
 
 
 // Get Leaves function

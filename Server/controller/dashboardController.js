@@ -15,7 +15,7 @@ const getSummary = async ()=>{
         const leaveStatus = await leaveSchema.aggregate([
             {
                 $group:{
-                    status:"$status",
+                    _id:"$status",
                     count: {$sum: 1}
                 }
             }
@@ -33,6 +33,7 @@ const getSummary = async ()=>{
             leaveSummary
         })
        } catch (error) {
+            console.log(error.message)
             return response.status(500).json({success: false, error: "dashbboard summary error "})
        }
 }
