@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -129,12 +130,13 @@ const List = () => {
             <option value="">2023</option>
           </select>
         </div>
-        <Link
+        {user?.role == 'employee' &&<Link
           to="/employee-dashboard/add-leave"
           className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700"
         >
           Add Leave
-        </Link>
+        </Link> }
+        
       </div>
 
       {/* Leave Table */}
