@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaRegMoneyBillAlt, FaCalendarAlt, FaUserAlt } from "react-icons/fa";
+// import { FaRegMoneyBillAlt, FaCalendarAlt, FaUserAlt } from "react-icons/fa";
 
 const ViewSalary = () => {
   const { id } = useParams();

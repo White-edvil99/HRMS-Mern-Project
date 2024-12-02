@@ -2,7 +2,7 @@ const express = require("express");
 const verifyUser = require("../middleware/authMiddleware");
 const { addLeave,getLeaves,getName ,updateLeaveStatus } = require("../controller/leaveController");
 const Leave = require("../models/Leave");
-const departmentRouter = express.Router();
+// const departmentRouter = express.Router();
 const router = express.Router()
 
 router.post('/add/:id', verifyUser, addLeave);
