@@ -1,6 +1,6 @@
 const express = require("express");
 const verifyUser = require("../middleware/authMiddleware");
-const { LeaveType, Leave } = require("../models/Leave");
+const { Leave } = require("../models/Leave");
 
 const {
   addLeave,
@@ -11,25 +11,6 @@ const {
 
 // const departmentRouter = express.Router();
 const router = express.Router();
-
-// Route to add a leave type form admin side
-// router.post("/add-leave-type", async (req, res) => {
-//     try {
-//         const { name, description, monthlyAllocation, adminId } = req.body;
-
-//         const newLeaveType = new LeaveType({
-//             name,
-//             description,
-//             monthlyAllocation,
-//             createdBy: adminId,
-//         });
-
-//         await newLeaveType.save();
-//         res.status(201).json({ message: "Leave type created successfully!", leaveType: newLeaveType });
-//     } catch (error) {
-//         res.status(500).json({ message: "Error creating leave type", error });
-//     }
-// });
 
 
 router.post("/add/:id", verifyUser, addLeave);
