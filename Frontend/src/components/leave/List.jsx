@@ -11,7 +11,7 @@ const List = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [leaveType, setLeaveType] = useState([]);
   const [monthlyQuota, setMonthlyQuota] = useState([]);
-
+  const [leaveTypes, setLeaveTypes] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [selectedType, setSelectedType] = useState(""); // State for selected leave type
@@ -87,8 +87,8 @@ const List = () => {
 
   //leave type posting
   const handleAddLeaveType = async (leavename, monthlyQuota) => {
-    if(!leavename || !monthlyQuota){
-      alert("please provide valid leave type and monthly quota")
+    if (!leavename || !monthlyQuota) {
+      alert("please provide valid leave type and monthly quota");
     }
     try {
       const response = await axios.post(
@@ -110,9 +110,33 @@ const List = () => {
       alert(errorMessage); // Show user-friendly message
     }
   };
-  
 
   // fetch leave type
+  useEffect(() => {
+    const fetchLeaveTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/leave-type/types",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log(response);
+        const leaveTypesArray = response.data.leaveTypes;
+        if (Array.isArray(leaveTypesArray)) {
+          setLeaveTypes(leaveTypesArray);
+        } else {
+          console.error("leaveTypes is not an array");
+        }
+      } catch (err) {
+        console.error("Error fetching leave types:", err);
+      }
+    };
+
+    fetchLeaveTypes();
+  }, []);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -159,10 +183,13 @@ const List = () => {
             onChange={(e) => setSelectedType(e.target.value.toLowerCase())}
           >
             <option value="">All Types</option>
-            <option value="casual">Casual Leave</option>
-            <option value="sick">Sick Leave</option>
-            <option value="privilege">Privilege Leave</option>
+            {leaveTypes.map((type) => (
+              <option key={type._id} value={type.leavename.toLowerCase()}>
+                {type.leavename}
+              </option>
+            ))}
           </select>
+
           <select className="border px-4 py-2 rounded">
             <option value="">2024</option>
             <option value="">2023</option>a
@@ -170,15 +197,17 @@ const List = () => {
 
           <div className="flex items-center justify-center bg-gray-100">
             {/* Trigger Button */}
+            {user?.role !=="employee" && 
             <button
-              onClick={() => setIsOpen(true)}
-              className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+            onClick={() => setIsOpen(true)}
+            className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
             >
               Create Leave Type
             </button>
-
+            }
+            </div>
             {/* Popup */}
-
+    
             {isOpen && (
               <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="bg-white p-6 rounded shadow-lg w-1/3">
@@ -212,7 +241,7 @@ const List = () => {
                 </div>
               </div>
             )}
-          </div>
+         
         </div>
 
         {user?.role == "employee" && (

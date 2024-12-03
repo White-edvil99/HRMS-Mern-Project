@@ -41,11 +41,11 @@ router.post("/add", verifyUser, async (req, res) => {
 
   router.get("/types", verifyUser, async (req, res) => {
     try {
-      if (req.user.role == "admin" ) {
-        return res
-          .status(403)
-          .json({ message: "You are not authorized to perform this action." });
-      }
+    //   if (req.user.role == "admin" ) {
+    //     return res
+    //       .status(403)
+    //       .json({ message: "You are not authorized to perform this action." });
+    //   }
   
       const leaveTypes = await LeaveType.find();
   
