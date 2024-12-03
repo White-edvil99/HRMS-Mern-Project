@@ -86,11 +86,14 @@ const List = () => {
   }, [selectedType, leaves]);
 
   //leave type posting
-  const handleAddLeaveType = async (name, monthlyQuota) => {
+  const handleAddLeaveType = async (leavename, monthlyQuota) => {
+    if(!leavename || !monthlyQuota){
+      alert("please provide valid leave type and monthly quota")
+    }
     try {
       const response = await axios.post(
         "http://localhost:3000/api/leave-type/add",
-        { name, monthlyQuota },
+        { leavename, monthlyQuota },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -162,7 +165,7 @@ const List = () => {
           </select>
           <select className="border px-4 py-2 rounded">
             <option value="">2024</option>
-            <option value="">2023</option>
+            <option value="">2023</option>a
           </select>
 
           <div className="flex items-center justify-center bg-gray-100">

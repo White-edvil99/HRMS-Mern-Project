@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const leaveTypeSchema = new Schema({
-  name: {
+    leavename: {
     type: String,
-    unique: true,
-    required: true, // Fixed typo
+    required: true,
+    unique: true, // Fixed typo
   },
   monthlyQuota: {
     type: Number,
@@ -13,5 +13,5 @@ const leaveTypeSchema = new Schema({
   },
 });
 
-const LeaveType = mongoose.model("LeaveType", leaveTypeSchema); // Model name correction
+const LeaveType = mongoose.model("lvType", leaveTypeSchema); // Model name correction
 module.exports = LeaveType;
