@@ -8,9 +8,9 @@ const List = () => {
   const { user } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [leaveType, setLeaveType] = useState("");
-  const [monthlyQuota, setMonthlyQuota] = useState("");
-  const [leaveTypes, setLeaveTypes] = useState([]); // Leave types array
+  const [leaveType, setLeaveType] = useState([]);
+  const [monthlyQuota, setMonthlyQuota] = useState([]);
+  const [leaveTypes, setLeaveTypes] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [selectedType, setSelectedType] = useState(""); // Selected leave type for filtering
@@ -106,11 +106,58 @@ const List = () => {
     }
   }, [selectedType, leaves]);
 
-  // Fetch leaves and leave types on component mount
+  //leave type posting
+  const handleAddLeaveType = async (leavename, monthlyQuota) => {
+    if (!leavename || !monthlyQuota) {
+      alert("please provide valid leave type and monthly quota");
+    }
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/leave-type/add",
+        { leavename, monthlyQuota },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("Response:", response);
+      alert(response.data.message);
+      setIsOpen(false);
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Error adding leave type.";
+      console.error("Error adding leave type:", errorMessage);
+      alert(errorMessage); // Show user-friendly message
+    }
+  };
+
+  // fetch leave type
   useEffect(() => {
-    fetchLeaves();
+    const fetchLeaveTypes = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/leave-type/types",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log(response);
+        const leaveTypesArray = response.data.leaveTypes;
+        if (Array.isArray(leaveTypesArray)) {
+          setLeaveTypes(leaveTypesArray);
+        } else {
+          console.error("leaveTypes is not an array");
+        }
+      } catch (err) {
+        console.error("Error fetching leave types:", err);
+      }
+    };
+
     fetchLeaveTypes();
-  }, [user?._id]);
+  }, []);
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -155,61 +202,60 @@ const List = () => {
           >
             <option value="">All Types</option>
             {leaveTypes.map((type) => (
-              <option key={type._id} value={type.leavename}>
+              <option key={type._id} value={type.leavename.toLowerCase()}>
                 {type.leavename}
               </option>
             ))}
           </select>
-        </div>
-        {user?.role === "admin" && (
-          <button
-            onClick={() => setIsOpen(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
-          >
-            Create Leave Type
-          </button>
-        )}
-        {user?.role === "employee" && (
-          <Link
-            to="/employee-dashboard/add-leave"
-            className="bg-purple-600 text-white px-4 py-2 rounded shadow hover:bg-purple-700"
-          >
-            Add Leave
-          </Link>
-        )}
-      </div>
+          <select className="border px-4 py-2 rounded">
+            <option value="">2024</option>
+            <option value="">2023</option>a
+          </select>
 
-      {/* Popup for Adding Leave Type (Admin only) */}
-      {isOpen && user?.role === "admin" && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg w-1/3">
-            <h2 className="text-lg font-bold mb-4">Create Leave Type</h2>
-            <input
-              type="text"
-              placeholder="Leave Type"
-              value={leaveType}
-              onChange={(e) => setLeaveType(e.target.value)}
-              className="border p-2 mb-4 w-full"
-            />
-            <input
-              type="number"
-              placeholder="Monthly Quota"
-              value={monthlyQuota}
-              onChange={(e) => setMonthlyQuota(e.target.value)}
-              className="border p-2 mb-4 w-full"
-            />
+          <div className="flex items-center justify-center bg-gray-100">
+            {/* Trigger Button */}
             <button
-              onClick={handleAddLeaveType}
-              className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700"
+              onClick={() => setIsOpen(true)}
+              className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
             >
-              Add
+              Create Leave Type
             </button>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="bg-red-600 text-white px-4 py-2 rounded shadow hover:bg-red-700 mt-2"
-            >
-              Cancel
-            </button>
+
+            {/* Popup */}
+
+            {isOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="bg-white p-6 rounded shadow-lg w-1/3">
+                  <h2 className="text-lg font-bold mb-4">Create Leave Type</h2>
+                  <input
+                    type="text"
+                    placeholder="Leave Type"
+                    value={leaveType}
+                    onChange={(e) => setLeaveType(e.target.value)}
+                    className="border p-2 mb-4 w-full"
+                  />
+                  <input
+                    type="number"
+                    placeholder="Monthly Quota"
+                    value={monthlyQuota}
+                    onChange={(e) => setMonthlyQuota(e.target.value)}
+                    className="border p-2 mb-4 w-full"
+                  />
+                  <button
+                    onClick={() => handleAddLeaveType(leaveType, monthlyQuota)}
+                    className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+                  >
+                    Add Leave Type
+                  </button>
+                  <button
+                    onClick={() => setIsOpen(false)}
+                    className="px-4 py-2 text-white bg-red-500 rounded hover:bg-red-600"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -15,3 +15,5 @@ const leaveTypeSchema = new Schema({
 
 const LeaveType = mongoose.model("lvType", leaveTypeSchema); // Model name correction
 module.exports = LeaveType;
+
+
