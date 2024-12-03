@@ -13,6 +13,7 @@ const path = require("path");
 const leaveRouter = require("./routes/leave");
 const leaveTypeRouter = require('./routes/leavetype')
 // const connectToDb = require("./Database/Db");
+const AttendanceRouter = require("./routes/attandanceRouter")
 const dashboardRouter = require("./routes/dashboard")
 const userRouter = require("./routes/user")
 
@@ -30,6 +31,7 @@ app.use("/api/employees", employeeRoutes);
 app.use("/api/salary", salaryRouter);
 app.use('/api/leave', leaveRouter);
 app.use("/api/leave-type", leaveTypeRouter)
+app.use("/api/attendance", AttendanceRouter)
 // app.use('/api/employee', leaveRouter);
 app.use("/api/setting/", settingRouter);
 app.use("/api/dashboard/", dashboardRouter);

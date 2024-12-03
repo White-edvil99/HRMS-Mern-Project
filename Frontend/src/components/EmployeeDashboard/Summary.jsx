@@ -1,9 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
+import axios from "axios";
 
 const Summary = () => {
   const { user } = useAuth();
+  console.log("hello: ",user)
+  const [status, setStatus] = useState('');
+
+  const handleCheckIn = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/attendance/checkin', { userId: user._id });
+      setStatus(response.data.message);
+      console.log("byebye",response)
+    } catch (err) {
+      console.error(err);
+      setStatus('Error checking in.');
+    }
+  };
+
+  const handleCheckOut = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/attendance/checkout', { userId: user._id });
+      setStatus(response.data.message);
+      console.log("bye 2", response)
+    } catch (err) {
+      console.error(err);
+      setStatus('Error checking out.');
+    }
+  };
 
   return (
     <div className="p-6 bg-white min-h-screen text-gray-800">
@@ -43,10 +68,9 @@ const Summary = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
         {/* IT Project Summary */}
         <div className="bg-teal-100 rounded-lg shadow-md p-6">
-          <h3 className="text-gray-700 text-lg font-semibold">IT Project Summary</h3>
-          <div className="mt-4">
-            <p className="text-gray-500">General Overview of Projects</p>
-          </div>
+              <button onClick={handleCheckIn}>Check In</button>
+            <button onClick={handleCheckOut}>Check Out</button>
+            <p>{status}</p>
         </div>
 
         {/* Calendar */}
