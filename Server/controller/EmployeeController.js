@@ -33,6 +33,11 @@ const addEmployee = async (req, res) => {
       leaveInfo
     } = req.body;
 
+    //cehcks 
+    if (!name || !email || !password || !role || !employInfo || !salaryInfo || !departmentInfo) {
+      return res.status(400).json({ success: false, error: "Missing required fields" });
+    }
+
     const { 
       dateOfBirth, 
       gender, 
@@ -302,21 +307,52 @@ const fetchEmployeeById = async (req, res) => {
 
 //deleteemployee
 
-const deleteEmployee = async(req,res) =>{
+const deleteEmployee = async (req, res) => {
   try {
-    const employeeId = req.params.id;  //getting the empid from the url parameter
-    const employee = await Employee.findByIdAndDelete(employeeId);
+    const employeeId = req.params.id; // Employee ID from the request params
 
-    if(!employee){
-      return res.status(404).json({message: "employee not found for deletion"})
+    // Find the employee by ID
+    const employee = await Employee.findById(employeeId);
+
+    if (!employee) {
+      return res.status(404).json({ message: "Employee not found for deletion" });
     }
 
-    res.status(200).json({message: "employee Deleted successfully"})
+    // Delete associated User document
+    await User.findByIdAndDelete(employee.user);
+
+    // Delete associated Salary document
+    if (employee.salaryId) {
+      await Salary.findByIdAndDelete(employee.salaryId);
+    }
+
+    // Delete the Employee document
+    await Employee.findByIdAndDelete(employeeId);
+
+    res.status(200).json({ message: "Employee and related data deleted successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({message: "error in develting employee"})
+    console.error("Error deleting employee:", error);
+    res.status(500).json({ message: "Error in deleting employee" });
   }
 };
+
+
+
+// const deleteEmployee = async(req,res) =>{
+//   try {
+//     const employeeId = req.params.id;  //getting the empid from the url parameter
+//     const employee = await Employee.findByIdAndDelete(employeeId);
+
+//     if(!employee){
+//       return res.status(404).json({message: "employee not found for deletion"})
+//     }
+
+//     res.status(200).json({message: "employee Deleted successfully"})
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({message: "error in develting employee"})
+//   }
+// };
 
 module.exports = {
   addEmployee,

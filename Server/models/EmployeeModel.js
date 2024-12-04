@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const { nanoid } = require('nanoid'); // Import nanoid for unique ID generation
 const User = require("./User");
 const Salary = require("./Salary");
-const Leave = require("./Leave");
+const {Leave} = require("../models/Leave")
 
 const { Schema } = mongoose;
 
