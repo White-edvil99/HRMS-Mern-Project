@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaUser } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import axios from "axios";
 
 const Summary = () => {
   const { user } = useAuth();
-  console.log("hello: ",user)
+  console.log("hello: ", user)
   const [status, setStatus] = useState('');
+  const [attendance, setAttendance] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const handleCheckIn = async () => {
     try {
       const response = await axios.post('http://localhost:3000/api/attendance/checkin', { userId: user._id });
       setStatus(response.data.message);
-      console.log("byebye",response)
+      setAttendance((prev) => ({ ...prev, checkIn: response.data.attendance.checkIn }));
     } catch (err) {
       console.error(err);
       setStatus('Error checking in.');
@@ -23,12 +25,31 @@ const Summary = () => {
     try {
       const response = await axios.post('http://localhost:3000/api/attendance/checkout', { userId: user._id });
       setStatus(response.data.message);
-      console.log("bye 2", response)
+      setAttendance((prev) => ({ ...prev, checkOut: response.data.attendance.checkOut }));
     } catch (err) {
       console.error(err);
       setStatus('Error checking out.');
     }
   };
+
+
+
+  useEffect(() => {
+    const fetchAttendance = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/attendance/today/${user._id}`);
+        setAttendance(response.data);
+      } catch (err) {
+        console.error('Error fetching attendance:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user?._id) fetchAttendance();
+  }, [user]);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="p-6 bg-white min-h-screen text-gray-800">
@@ -68,9 +89,28 @@ const Summary = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
         {/* IT Project Summary */}
         <div className="bg-teal-100 rounded-lg shadow-md p-6">
-              <button onClick={handleCheckIn}>Check In</button>
+          <div>
+            <button onClick={handleCheckIn}>Check In</button>
             <button onClick={handleCheckOut}>Check Out</button>
             <p>{status}</p>
+          </div>
+
+          <div>
+  <h2>Your Attendance for Today</h2>
+  <p>
+    Check-In Time: 
+    {attendance.checkIn 
+      ? new Date(attendance.checkIn).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) 
+      : 'Not checked in yet'}
+  </p>
+  <p>
+    Check-Out Time: 
+    {attendance.checkOut 
+      ? new Date(attendance.checkOut).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) 
+      : 'Not checked out yet'}
+  </p>
+</div>
+
         </div>
 
         {/* Calendar */}
@@ -111,13 +151,12 @@ const Calendar = () => {
         {calendarDays.map((day, index) => (
           <div
             key={index}
-            className={`p-2 text-sm rounded-lg ${
-              day
+            className={`p-2 text-sm rounded-lg ${day
                 ? day === today.getDate()
                   ? "bg-teal-500 text-white"
                   : "bg-teal-100 text-gray-800"
                 : ""
-            }`}
+              }`}
           >
             {day || ""}
           </div>

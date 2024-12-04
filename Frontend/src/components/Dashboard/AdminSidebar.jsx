@@ -21,7 +21,7 @@ const AdminSidebar = () => {
 
   return (
     <div
-      className={`fixed h-screen bg-gradient-to-b from-[#f0f8ff] to-[#e6f7ff] text-gray-800 shadow-lg transition-all duration-300 z-10 ${
+      className={`fixed h-full bg-gradient-to-b from-[#f0f8ff] to-[#e6f7ff] text-gray-800 shadow-lg transition-all duration-300 z-10 ${
         isMobileExpanded ? "w-72" : "w-16"
       } md:w-72`}
     >
@@ -162,7 +162,7 @@ const AdminLayout = ({ children }) => {
   return (
     <div className="flex">
       <AdminSidebar />
-      <div className="ml-16 md:ml-60 w-full bg-gray-50 min-h-screen p-6">
+      <div className="ml-16 md:ml-60 w-full bg-gray-50 min-h-full p-6">
         {children}
       </div>
     </div>
