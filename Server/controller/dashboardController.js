@@ -33,7 +33,7 @@ const getSummary = async ()=>{
             leaveSummary
         })
        } catch (error) {
-            console.log(error.message)
+            // console.log(error.message)
             return response.status(500).json({success: false, error: "dashbboard summary error "})
        }
 }

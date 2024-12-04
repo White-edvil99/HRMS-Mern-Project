@@ -18,7 +18,7 @@ router.post("/add/:id", verifyUser, addLeave);
 router.get(
   "leaves/:id",
   (req, res, next) => {
-    console.log("fecthing leave for ids", req.params.id);
+    // console.log("fecthing leave for ids", req.params.id);
     next();
   },
   verifyUser,

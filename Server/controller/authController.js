@@ -35,15 +35,15 @@ const login = async (req, res) => {
             user: { _id: user._id, name: user.name, role: user.role },
         });
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         return res.status(500).json({ success: false, error: "Internal server error" });
     }
 };
 
 const verify = async (req, res) => {
     try {
-        console.log("Verifying user...");
-        console.log("User:", req.user);
+        // console.log("Verifying user...");
+        // console.log("User:", req.user);
         return res.status(200).json({ success: true, user: req.user });
     } catch (error) {
         console.error("Internal server error:", error.message);
@@ -67,7 +67,7 @@ const refreshToken = async (req, res) => {
 
         return res.status(200).json({ success: true, token: newToken });
     } catch (error) {
-        console.log(error.message);
+        // console.log(error.message);
         return res.status(500).json({ success: false, error: "Internal server error" });
     }
 };

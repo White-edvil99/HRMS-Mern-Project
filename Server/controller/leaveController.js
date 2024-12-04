@@ -33,7 +33,7 @@ const addLeave = async (req, res) => {
 const getName = async (req, res) => {
   try {
       const { id } = req.params; // Get the employee (user) ID from the request params
-      console.log("Fetching leaves for user ID:", id); // Debugging log
+      // console.log("Fetching leaves for user ID:", id); // Debugging log
 
       // Query the database for leaves associated with this user ID
       const leaves = await Leave.find({ employeeId: id }).populate('employeeId', 'name email'); // Populate data from User

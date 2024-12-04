@@ -20,7 +20,7 @@ const addDepartment = async (req, res) => {
 };
 
 const getDepartments = async (req, res) => {  // Added res parameter here
-    console.log("inside get departments");
+    // console.log("inside get departments");
     try {
         const departments = await Department.find();
         return res.status(200).json({

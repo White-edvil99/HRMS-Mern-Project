@@ -53,7 +53,7 @@ const addEmployee = async (req, res) => {
     
 
  
-    console.log("=================INSIDE EMP",departmentId)
+    // console.log("=================INSIDE EMP",departmentId)
 
     // Check if a user with the given email already exists
     const userExists = await User.findOne({ email });
@@ -80,7 +80,7 @@ const addEmployee = async (req, res) => {
     })
 
 
-    console.log("emp==============",newUser)
+    // console.log("emp==============",newUser)
 
     // Create a new Employee document with a reference to the created User
     const newEmployee = new Employee({
@@ -165,7 +165,7 @@ const getEmployeeById = async (req, res) => {
 
 // Get all employees
 const getEmployees = async (req, res) => {
-  console.log("get======")
+  // console.log("get======")
   try {
     const employees = await Employee.find()
     .populate('departmentId')
@@ -211,7 +211,7 @@ const editEmployee = async (req, res) => {
     const { id } = req.params;
     const { name, maritalStatus, designation, department, salary } = req.body;
 
-    console.log("===============inside edit",name,maritalStatus,designation,department,salary)
+    // console.log("===============inside edit",name,maritalStatus,designation,department,salary)
 
     const employee = await Employee.findById({ _id: id }).populate([
       "departmentId",

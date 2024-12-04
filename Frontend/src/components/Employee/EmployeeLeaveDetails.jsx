@@ -16,7 +16,7 @@ const EmployeeLeaveDetails = () => {
                 },
             });
 
-            console.log("Fetched employee leaves:", response); // Debugging
+            // console.log("Fetched employee leaves:", response); // Debugging
             setLeaves(response.data.leaves); // Update the state with the fetched leaves
         } catch (err) {
             console.error("Error fetching leave details", err);

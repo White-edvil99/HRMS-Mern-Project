@@ -7,7 +7,7 @@ const router = express.Router()
 router.post("/add", verifyUser, async (req, res) => {
    
     const { leavename, monthlyQuota } = req.body;
-    console.log("here name is : ",leavename, monthlyQuota)
+    // console.log("here name is : ",leavename, monthlyQuota)
   
     if (req.user.role !== "admin") {
       return res

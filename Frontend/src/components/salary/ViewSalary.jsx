@@ -10,7 +10,7 @@ const ViewSalary = () => {
 
   useEffect(() => {
     const fetchSalaryDetails = async () => {
-      console.log("=========hello salary start");
+      // console.log("=========hello salary start");
       try {
         const response = await axios.get(
           `http://localhost:3000/api/salary/${id}`, // Replace with actual endpoint
@@ -20,8 +20,8 @@ const ViewSalary = () => {
             },
           }
         );
-        console.log(response);
-        console.log("========salary end");
+        // console.log(response);
+        // console.log("========salary end");
 
         // Ensure that salaryData is always an array
         const data = response.data.salary;

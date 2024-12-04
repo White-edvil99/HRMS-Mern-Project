@@ -84,7 +84,7 @@ const getSalary = async (req, res) => {
     const { id } = req.params;
     const userRole = req.user.role;
 
-    console.log("ROLE==========",userRole)
+    // console.log("ROLE==========",userRole)
 
     let salaryData;
     if (userRole === "admin") {

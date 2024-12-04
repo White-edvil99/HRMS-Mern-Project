@@ -30,18 +30,18 @@ employeeSchema.pre('findOneAndDelete', async function () {
   const employee = await this.model.findOne(this.getQuery());
 
   if (employee) {
-    console.log("Employee data before deletion:", employee);
+    // console.log("Employee data before deletion:", employee);
 
     // Access employee fields
-    console.log("User ID:", employee.user);
-    console.log("Employee ID:", employee._id);
+    // console.log("User ID:", employee.user);
+    // console.log("Employee ID:", employee._id);
 
     // Perform cascading deletions
     await User.deleteMany({ _id: employee.user });
     await Salary.deleteMany({ employeeId: employee.user });
     await Leave.deleteMany({ employeeId: employee._id });
   } else {
-    console.log("No matching employee found.");
+    // console.log("No matching employee found.");
   }
 });
 

@@ -16,7 +16,7 @@ const AddDepartment = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting data...", department);
+    // console.log("Submitting data...", department);
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -34,7 +34,7 @@ const AddDepartment = () => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.data.success) {
         Navigate("/admin-dashboard/departments");
       } else {

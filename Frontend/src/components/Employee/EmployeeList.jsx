@@ -54,7 +54,7 @@ const EmployeeList = () => {
     employee.employeeId.includes(searchTerm)
   );
 
-  console.log(employees);
+  // console.log(employees);
 
   return (
     <div className="container mx-auto p-4 md:p-8">
