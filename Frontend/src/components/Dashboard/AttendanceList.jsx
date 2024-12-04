@@ -11,7 +11,7 @@ const AttendanceList = () => {
     setLoading(true);
     setError('');
     try {
-      const response = await axios.get(`http://localhost:3000/api/attendance/all/${date}`);
+      const response = await axios.get(`https://hrms-mern-project.onrender.com/api/attendance/all/${date}`);
       setAttendanceData(response.data);
     } catch (err) {
       setError('Error fetching attendance data.');

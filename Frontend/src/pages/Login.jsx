@@ -15,7 +15,7 @@ const Login = () => {
     console.log("Form submitted");
   
     try {
-      const response = await axios.post(`http://localhost:3000/api/auth/login`, { email, password });
+      const response = await axios.post(`https://hrms-mern-project.onrender.com/api/auth/login`, { email, password });
       console.log(response)
 
       if (response.data.success) {

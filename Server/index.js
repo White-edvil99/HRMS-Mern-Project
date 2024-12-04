@@ -20,7 +20,11 @@ connectToDb(); // Call the function to connect to the database
 
 const app = express();
 
-app.use(cors());
+const corsOption = {
+  origin:"https://hrms-mern-project.onrender.com",
+  credential:true
+}
+app.use(cors(corsOption));
 app.use(express.json());
 
 // API Routes
@@ -34,6 +38,8 @@ app.use("/api/attendance", AttendanceRouter);
 app.use("/api/setting/", settingRouter);
 app.use("/api/dashboard/", dashboardRouter);
 app.use("/api/user", userRouter);
+
+
 
 // Static file serving for frontend
 const frontendPath = path.join(__dirname, '../Frontend/dist');

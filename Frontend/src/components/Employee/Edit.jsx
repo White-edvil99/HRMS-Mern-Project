@@ -13,7 +13,7 @@ const Edit = () => {
     // Fetch departments
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/departments", {
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/departments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -30,7 +30,7 @@ const Edit = () => {
     // Fetch employee data
     const fetchEmployee = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/employees/${id}`);
+        const response = await axios.get(`https://hrms-mern-project.onrender.com/api/employees/${id}`);
         setEmployee(response.data.data);
       } catch (error) {
         console.error("Error fetching employee data", error);
@@ -76,7 +76,7 @@ const Edit = () => {
 
       // Submit updated data
       const response = await axios.put(
-        `http://localhost:3000/api/employees/${id}`,
+        `https://hrms-mern-project.onrender.com/api/employees/${id}`,
         formData,
         {
           headers: {

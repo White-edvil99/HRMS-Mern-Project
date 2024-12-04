@@ -11,7 +11,7 @@ const EmployeeList = () => {
     const fetchEmployees = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/employees",
+          "https://hrms-mern-project.onrender.com/api/employees",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -31,7 +31,7 @@ const EmployeeList = () => {
 
   const deleteEmployee = async (employeeId) => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/employees/${employeeId}`, {
+      const response = await axios.delete(`https://hrms-mern-project.onrender.com/api/employees/${employeeId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

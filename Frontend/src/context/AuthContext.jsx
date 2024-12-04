@@ -14,7 +14,7 @@ const AuthProvider = ({ children }) => {
       if (token) {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/auth/verify",
+            "https://hrms-mern-project.onrender.com/api/auth/verify",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const AuthProvider = ({ children }) => {
       if (refreshToken) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/api/auth/refresh-token",
+            "https://hrms-mern-project.onrender.com/api/auth/refresh-token",
             { token: refreshToken }
           );
           if (response.data.success) {

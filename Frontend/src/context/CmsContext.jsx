@@ -14,7 +14,7 @@ const CmsProvider = function ({ children }) {
       if (token) {
         try {
           const response = await axios.get(
-            "http://localhost:3000/api/auth/verify",
+            "https://hrms-mern-project.onrender.com/api/auth/verify",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ const CmsProvider = function ({ children }) {
     const token = localStorage.getItem("refreshToken");
     if (token) {
       try {
-        const response = await axios.post("http://localhost:3000/api/auth/refresh-token", { token });
+        const response = await axios.post("https://hrms-mern-project.onrender.com/api/auth/refresh-token", { token });
         if (response.data.success) {
           localStorage.setItem("token", response.data.token);
         }

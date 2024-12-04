@@ -12,7 +12,7 @@ const Summary = () => {
 
   const handleCheckIn = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/attendance/checkin', { userId: user._id });
+      const response = await axios.post('https://hrms-mern-project.onrender.com/api/attendance/checkin', { userId: user._id });
       setStatus(response.data.message);
       setAttendance((prev) => ({ ...prev, checkIn: response.data.attendance.checkIn }));
       setIsCheckedIn(true); // Set active state to true on check-in
@@ -24,7 +24,7 @@ const Summary = () => {
 
   const handleCheckOut = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/attendance/checkout', { userId: user._id });
+      const response = await axios.post('https://hrms-mern-project.onrender.com/api/attendance/checkout', { userId: user._id });
       setStatus(response.data.message);
       setAttendance((prev) => ({ ...prev, checkOut: response.data.attendance.checkOut }));
       setIsCheckedIn(false); // Reset active state on check-out
@@ -37,7 +37,7 @@ const Summary = () => {
   useEffect(() => {
     const fetchAttendance = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/attendance/today/${user._id}`);
+        const response = await axios.get(`https://hrms-mern-project.onrender.com/api/attendance/today/${user._id}`);
         setAttendance(response.data);
         // Automatically set active state based on attendance data
         if (response.data.checkIn && !response.data.checkOut) {

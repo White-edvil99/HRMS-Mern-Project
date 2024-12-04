@@ -22,7 +22,7 @@ const AddEmployee = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/departments", {
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/departments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -94,7 +94,7 @@ const AddEmployee = () => {
     // Now you can send the formDataObj to the backend (e.g., using axios or fetch)
     // Example:
     try {
-      const response = await axios.post("http://localhost:3000/api/employees/add", data, {
+      const response = await axios.post("https://hrms-mern-project.onrender.com/api/employees/add", data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "multipart/form-data",

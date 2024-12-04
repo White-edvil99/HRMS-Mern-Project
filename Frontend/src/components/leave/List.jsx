@@ -25,7 +25,7 @@ const List = () => {
     if (!user?._id) return;
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/leave/${user._id}`,
+        `https://hrms-mern-project.onrender.com/api/leave/${user._id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,7 +47,7 @@ const List = () => {
   const handleStatusChange = async (leaveId, status) => {
     try {
       await axios.patch(
-        `http://localhost:3000/api/leave/status/${leaveId}`,
+        `https://hrms-mern-project.onrender.com/api/leave/status/${leaveId}`,
         { status },
         {
           headers: {
@@ -92,7 +92,7 @@ const List = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/leave-type/add",
+        "https://hrms-mern-project.onrender.com/api/leave-type/add",
         { leavename, monthlyQuota },
         {
           headers: {
@@ -116,7 +116,7 @@ const List = () => {
     const fetchLeaveTypes = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/leave-type/types",
+          "https://hrms-mern-project.onrender.com/api/leave-type/types",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

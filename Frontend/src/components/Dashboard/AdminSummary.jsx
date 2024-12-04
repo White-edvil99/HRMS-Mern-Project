@@ -15,7 +15,7 @@ const AdminSummary = () => {
   useEffect(() => {
     const fetchDepartmentCount = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/departments", {
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/departments", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setDepartmentCount(response.data.data.length);
@@ -30,7 +30,7 @@ const AdminSummary = () => {
   useEffect(() => {
     const fetchEmployeeCount = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/employees", {
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/employees", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setEmployeeCount(response.data.data.length);

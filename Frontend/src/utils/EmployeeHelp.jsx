@@ -3,7 +3,7 @@ import axios from "axios"
 const fetchDepartment = async ()=>{
     let departments
     try {
-        const response = await axios.get("http://localhost:3000/api/department",{
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/department",{
             headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`
             },

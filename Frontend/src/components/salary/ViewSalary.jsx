@@ -13,7 +13,7 @@ const ViewSalary = () => {
       // console.log("=========hello salary start");
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/salary/${id}`, // Replace with actual endpoint
+          `https://hrms-mern-project.onrender.com/api/salary/${id}`, // Replace with actual endpoint
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -113,7 +113,7 @@ export default ViewSalary;
 //       console.log("=========hello salary start");
 //       try {
 //         const response = await axios.get(
-//           `http://localhost:3000/api/salary/${id}`, // Replace with actual endpoint
+//           `https://hrms-mern-project.onrender.com/api/salary/${id}`, // Replace with actual endpoint
 //           {
 //             headers: {
 //               Authorization: `Bearer ${localStorage.getItem("token")}`,

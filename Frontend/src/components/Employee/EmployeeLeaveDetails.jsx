@@ -10,7 +10,7 @@ const EmployeeLeaveDetails = () => {
   useEffect(() => {
     const fetchEmployeeLeaves = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/employee/leaves/${id}`, {
+            const response = await axios.get(`https://hrms-mern-project.onrender.com/api/employee/leaves/${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`, // Include the token
                 },

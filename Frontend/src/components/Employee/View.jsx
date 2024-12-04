@@ -11,7 +11,7 @@ const EmployeeDetails = () => {
     const fetchEmployeeDetails = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/employees/view/${id}`,
+          `https://hrms-mern-project.onrender.com/api/employees/view/${id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -59,8 +59,8 @@ const EmployeeDetails = () => {
         <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 rounded-full overflow-hidden shadow-lg border-4 border-white">
           {employee.image ? (
             <img
-              // src={`http://localhost:3000/uploads/${employee.image}`}
-              src={`http://localhost:3000/uploads/${employee.image}`} // Assuming `employee.image` contains the image filename or path
+              // src={`https://hrms-mern-project.onrender.com/uploads/${employee.image}`}
+              src={`https://hrms-mern-project.onrender.com/uploads/${employee.image}`} // Assuming `employee.image` contains the image filename or path
               alt={employee.name}
               className="w-20 h-20 rounded-full object-cover"
             />

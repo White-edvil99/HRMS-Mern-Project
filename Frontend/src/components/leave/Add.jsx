@@ -23,7 +23,7 @@ const AddLeave = () => {
   useEffect(() => {
     const fetchLeaveTypes = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/leave-type/types', {
+        const response = await axios.get('https://hrms-mern-project.onrender.com/api/leave-type/types', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -57,7 +57,7 @@ const AddLeave = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/leave/add/${user._id}`,
+        `https://hrms-mern-project.onrender.com/api/leave/add/${user._id}`,
         leave,
         {
           headers: {

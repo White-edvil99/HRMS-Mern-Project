@@ -20,7 +20,7 @@ const Add = () => {
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/departments", {
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/departments", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -37,7 +37,7 @@ const Add = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/user/role/employee", {
+        const response = await axios.get("https://hrms-mern-project.onrender.com/api/user/role/employee", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -54,7 +54,7 @@ const Add = () => {
   const handleDepartment = async (e) => {
     setEmployee({ ...employee, department: e.target.value });
     try {
-      const response = await axios.get(`http://localhost:3000/api/employees?department=${e.target.value}`, {
+      const response = await axios.get(`https://hrms-mern-project.onrender.com/api/employees?department=${e.target.value}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -91,7 +91,7 @@ const Add = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3000/api/salary/add", employee, {
+      await axios.post("https://hrms-mern-project.onrender.com/api/salary/add", employee, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -234,7 +234,7 @@ export default Add;
 //   useEffect(() => {
 //     const fetchDepartments = async () => {
 //       try {
-//         const response = await axios.get("http://localhost:3000/api/departments", {
+//         const response = await axios.get("https://hrms-mern-project.onrender.com/api/departments", {
 //           headers: {
 //             Authorization: `Bearer ${localStorage.getItem("token")}`,
 //           },
@@ -252,7 +252,7 @@ export default Add;
 //   useEffect(() => {
 //     const fetchEmployees = async () => {
 //       try {
-//         const response = await axios.get("http://localhost:3000/api/user/role/employee", {
+//         const response = await axios.get("https://hrms-mern-project.onrender.com/api/user/role/employee", {
 //           headers: {
 //             Authorization: `Bearer ${localStorage.getItem("token")}`,
 //           },
@@ -278,7 +278,7 @@ export default Add;
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
 //     try {
-//       await axios.post("http://localhost:3000/api/salary/add", employee, {
+//       await axios.post("https://hrms-mern-project.onrender.com/api/salary/add", employee, {
 //         headers: {
 //           Authorization: `Bearer ${localStorage.getItem("token")}`,
 //         },

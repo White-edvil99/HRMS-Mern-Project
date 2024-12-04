@@ -31,7 +31,7 @@ const Setting = () => {
     // };
       try {
         const response = await axios.put(
-          `http://localhost:3000/api/user/change-password/${user._id}`,
+          `https://hrms-mern-project.onrender.com/api/user/change-password/${user._id}`,
           setting,
           {
             headers: {
