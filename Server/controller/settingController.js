@@ -3,7 +3,7 @@
 const { response } = require("express");
 const User = require("../models/User");
 // const bcrypt from 'bcrypt'
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 
 const changePassword = async (req, res) => {

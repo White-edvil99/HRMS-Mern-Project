@@ -1,7 +1,7 @@
 const multer = require("multer");
 const Employee = require("../models/EmployeeModel");
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 
 // Add Employee function
