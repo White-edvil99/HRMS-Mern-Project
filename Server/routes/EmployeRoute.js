@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Employee = require("../models/EmployeeModel");
+// const Employee = require("../models/EmployeeModel");
 const verifyUser = require("../middleware/authMiddleware");
 const {
   addEmployee,

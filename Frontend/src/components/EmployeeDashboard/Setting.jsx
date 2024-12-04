@@ -57,7 +57,7 @@ const Setting = () => {
 
   return (
 
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex flex-col items-center justify-center min-h-full bg-gray-100">
   <h2 className="text-4xl md:text-6xl text-gray-400 font-extrabold mb-6">
     Change Password
   </h2>
