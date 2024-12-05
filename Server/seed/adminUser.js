@@ -13,11 +13,11 @@ mongoose
   .then(async () => {
     console.log("Connected to MongoDB");
 
-    const hashPassword = await bcrypt.hash("admin", 10);
+    const hashPassword = await bcrypt.hash("Admin", 10);
 
     const newUser = new User({
-      name:"admin",
-      email: "admin@admin.com",
+      name:"Ashish Uniyal",
+      email: "a.uniyal@gmail.com",
       password: hashPassword,
       role: "admin",
     });
