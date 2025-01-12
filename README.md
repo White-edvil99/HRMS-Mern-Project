@@ -1,6 +1,6 @@
 # Human Resource Management System (HRMS)
 
-![HRMS Screenshot](path_to_your_image)
+![HRMS Screenshot](Frontend/public/images/Screenshot 2024-12-12 165458.png)
 
 ## Table of Contents
 
